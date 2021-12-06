@@ -1,15 +1,41 @@
-import * as React from 'react';
-import { AppRegistry } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { name as appName } from './app.json';
-import App from './App';
+import React from 'react';
+import {AppRegistry} from 'react-native';
+import {Provider} from 'react-native-paper';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {theme} from './src/core/theme';
+import {name as appName} from './app.json';
+import {
+  StartScreen,
+  LoginScreen,
+  RegisterScreen,
+  ResetPasswordScreen,
+  Dashboard,
+} from './src/screens';
 
-export default function Main() {
+const Stack = createStackNavigator();
+
+export default function App() {
   return (
-    <PaperProvider>
-      <App />
-    </PaperProvider>
+    <Provider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="StartScreen"
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="StartScreen" component={StartScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+          <Stack.Screen name="Dashboard" component={Dashboard} />
+          <Stack.Screen
+            name="ResetPasswordScreen"
+            component={ResetPasswordScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
-AppRegistry.registerComponent(appName, () => Main);
+AppRegistry.registerComponent(appName, () => App);
