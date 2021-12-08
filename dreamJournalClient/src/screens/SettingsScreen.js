@@ -3,17 +3,21 @@ import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Paragraph from '../components/Paragraph';
-import {Button} from 'react-native-paper';
+import Button from '../components/Button';
+import {StyleSheet, View} from 'react-native';
 
 export default function SettingsScreen({navigation}) {
   return (
     <Background>
-      <Logo />
       <Header>Ustawienia</Header>
-      <Paragraph>
-        lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-      </Paragraph>
+      <Button styles={styles.button} mode="contained">
+        Edytuj dane użytkownika
+      </Button>
+      <Button styles={styles.button} mode="contained">
+        Usuń konto
+      </Button>
       <Button
+        styles={styles.button}
         mode="contained"
         onPress={() =>
           navigation.reset({
@@ -26,3 +30,9 @@ export default function SettingsScreen({navigation}) {
     </Background>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 10,
+  },
+});

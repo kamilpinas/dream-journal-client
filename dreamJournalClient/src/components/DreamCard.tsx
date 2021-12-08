@@ -7,7 +7,6 @@ interface DreamCardProps {
   title?: string;
   subtitle?: string;
   icon?: IconSource;
-  content?: string;
   size?: number;
 }
 const LeftContent = (props: DreamCardProps) => (

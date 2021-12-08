@@ -9,7 +9,7 @@ export default function Button({mode, style, ...props}) {
       style={[
         styles.button,
         mode === 'outlined' && {backgroundColor: theme.colors.surface},
-        style,
+        style || '',
       ]}
       labelStyle={styles.text}
       mode={mode}
