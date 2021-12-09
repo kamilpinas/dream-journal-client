@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ImageBackground, StyleSheet, View} from 'react-native';
 import {Card, IconButton, Paragraph, Title} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import {theme} from '../core/theme';
@@ -15,55 +15,56 @@ interface SharedDreamCardProps {
 }
 export const SharedDreamCard = (props: SharedDreamCardProps) => (
   <View style={styles.container}>
-    <Card style={styles.card}>
-      <Card.Content>
-        <Paragraph>{props.sharedOn}</Paragraph>
+    <ImageBackground
+      source={require('../assets/sharedDreamBackground.png')}
+      resizeMode="cover"
+      style={styles.image}>
+      <View style={styles.insideImage}>
+        <Paragraph style={{marginTop: 50, textAlign: 'right'}}>
+          {props.sharedOn}
+        </Paragraph>
         <Title style={styles.title}>{props.title}</Title>
-        <Paragraph>{props.content}</Paragraph>
-        <Paragraph style={{marginTop: 12, textAlign: 'right'}}>
+        <Paragraph style={styles.text} ellipsizeMode="tail" numberOfLines={20}>
+          {props.content}
+        </Paragraph>
+        <Paragraph
+          style={{marginTop: 12, textAlign: 'right', fontStyle: 'italic'}}>
           {props.user}
         </Paragraph>
         <View style={styles.grades}>
-          <IconButton
-            icon="emoticon-sad-outline"
-            style={styles.button}
-            size={50}
-            color={theme.colors.error}
-          />
+          <IconButton icon="thumb-down" size={40} color={theme.colors.error} />
           <Paragraph>({props.votes})</Paragraph>
-          <IconButton
-            icon="emoticon-happy-outline"
-            style={styles.button}
-            size={50}
-            color={theme.colors.success}
-          />
+          <IconButton icon="thumb-up" size={40} color={theme.colors.success} />
         </View>
-      </Card.Content>
-    </Card>
+      </View>
+    </ImageBackground>
   </View>
 );
 
 const styles = StyleSheet.create({
-  card: {
-    width: '100%',
-    height: '100%',
-    borderWidth: 1,
-    borderColor: '#ebebeb',
-    borderRadius: 15,
-    marginBottom: -20,
-  },
   title: {
     fontSize: 21,
     color: theme.colors.primary,
     fontWeight: 'bold',
     paddingVertical: 12,
   },
-  button: {},
+  text: {fontSize: 12},
   grades: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignContent: 'flex-end',
+    alignContent: 'center',
+    marginTop: 'auto',
+    marginBottom: 20,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
   },
   container: {justifyContent: 'center', alignContent: 'center'},
+  insideImage: {
+    margin: 60,
+    height: '100%',
+  },
 });

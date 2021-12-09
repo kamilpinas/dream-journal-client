@@ -11,10 +11,13 @@ export default function SettingsScreen({navigation}) {
     <Background>
       <Header>Ustawienia</Header>
       <Button styles={styles.button} mode="contained">
-        Edytuj dane użytkownika
+        Dane użytkownika
       </Button>
       <Button styles={styles.button} mode="contained">
         Usuń konto
+      </Button>
+      <Button styles={styles.button} mode="contained">
+        Powiadomienia
       </Button>
       <Button
         styles={styles.button}
@@ -33,6 +36,6 @@ export default function SettingsScreen({navigation}) {
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
+    padding: 50,
   },
 });
