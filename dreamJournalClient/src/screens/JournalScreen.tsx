@@ -6,8 +6,9 @@ import {theme} from '../core/theme';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Fab} from '../components/Fab';
+import NewDreamModal from '../components/NewDreamModal';
 
-export default function JournalScreen() {
+export default function JournalScreen(navigation: any) {
   return (
     <SafeAreaView style={styles.container}>
       <Header style={styles.header}>Dziennik</Header>
@@ -85,7 +86,7 @@ export default function JournalScreen() {
           icon="camera"
         />
       </ScrollView>
-      <Fab label="Dodaj sen" />
+      <Fab label="Dodaj sen" onClick={navigation.goBack} />
     </SafeAreaView>
   );
 }

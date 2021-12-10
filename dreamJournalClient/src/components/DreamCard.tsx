@@ -5,6 +5,7 @@ import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
 interface DreamCardProps {
   title?: string;
+  content?: string;
   subtitle?: string;
   icon?: IconSource;
   size?: number;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ImageBackground, StyleSheet, View} from 'react-native';
-import {Card, IconButton, Paragraph, Title} from 'react-native-paper';
+import {IconButton, Paragraph, Title} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import {theme} from '../core/theme';
 
