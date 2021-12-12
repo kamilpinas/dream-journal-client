@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Header from '../components/Header';
 import {DreamCard} from '../components/DreamCard';
 import moment from 'moment';
@@ -6,87 +6,89 @@ import {theme} from '../core/theme';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Fab} from '../components/Fab';
-import NewDreamModal from '../components/NewDreamModal';
+import {NewDreamModal} from '../components/NewDreamModal';
 
 export default function JournalScreen(navigation: any) {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <Header style={styles.header}>Dziennik</Header>
       <ScrollView style={styles.scrollView}>
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
         <DreamCard
           title="Dzik jest bardzo zły"
-          subtitle={moment().format('YYYY-MM-DD')}
+          date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
         />
       </ScrollView>
-      <Fab label="Dodaj sen" onClick={navigation.goBack} />
+      <Fab label="Dodaj sen" onClick={() => setOpenModal(!openModal)} />
+      <NewDreamModal modalVisible={openModal} />
     </SafeAreaView>
   );
 }

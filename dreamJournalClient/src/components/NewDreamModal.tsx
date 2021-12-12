@@ -1,57 +1,43 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  StatusBar,
-  SafeAreaView,
-  Modal,
-} from 'react-native';
+import {View, StyleSheet, Dimensions, SafeAreaView, Modal} from 'react-native';
 import {TabView, SceneMap} from 'react-native-tab-view';
+import {DreamDescription} from './DreamDescription';
 
-const FirstRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#ff4081'}]} />
-);
-const SecondRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#673ab7'}]} />
-);
+const SecondRoute = () => <View style={{backgroundColor: '#673ab7'}} />;
+const ThirdRoute = () => <View style={{backgroundColor: '#545dfd'}} />;
 
-export default class NewDreamModal extends React.Component {
+interface NewDreamModalProps {
+  modalVisible: boolean;
+}
+export class NewDreamModal extends React.Component<NewDreamModalProps> {
   state = {
     index: 0,
     routes: [
-      {key: 'first', title: 'First'},
-      {key: 'second', title: 'Second'},
+      {key: 'description', title: 'Opis'},
+      {key: 'analysis', title: 'Analiza'},
+      {key: 'consciousness', title: 'Świadomość'},
     ],
-
     showModal: true,
   };
-
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <Modal visible presentationStyle="pageSheet">
+      <SafeAreaView>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.props.modalVisible}>
           <TabView
             navigationState={this.state}
             renderScene={SceneMap({
-              first: FirstRoute,
-              second: SecondRoute,
+              description: DreamDescription,
+              analysis: SecondRoute,
+              consciousness: ThirdRoute,
             })}
             onIndexChange={(index: any) => this.setState({index})}
             initialLayout={{width: Dimensions.get('window').width}}
-            style={styles.container}
           />
         </Modal>
       </SafeAreaView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: StatusBar.currentHeight,
-  },
-  scene: {
-    flex: 1,
-  },
-});

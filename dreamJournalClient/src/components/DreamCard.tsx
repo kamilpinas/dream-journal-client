@@ -6,7 +6,7 @@ import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 interface DreamCardProps {
   title?: string;
   content?: string;
-  subtitle?: string;
+  date?: string;
   icon?: IconSource;
   size?: number;
 }
@@ -22,7 +22,7 @@ export const DreamCard = (props: DreamCardProps) => (
   <Card style={styles.card}>
     <Card.Title
       title={props.title}
-      subtitle={props.subtitle}
+      subtitle={props.date}
       left={LeftContent}
       titleStyle={styles.cardTitle}
       subtitleStyle={styles.cardSubtitle}
