@@ -1,67 +1,57 @@
 import React, {useState} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import TextInput from './TextInput';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-date-picker';
 import Button from './Button';
 import {IconButton, Paragraph} from 'react-native-paper';
 import {theme} from '../core/theme';
+import moment from 'moment';
+import RNPickerSelect from 'react-native-picker-select';
 
 interface DreamDescriptionProps {}
+
 export function DreamDescription() {
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-  const onChange = (event: any, selectedDate: Date) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
-  const showMode = (currentMode: string) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-  const showDatepicker = () => {
-    showMode('date');
-  };
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('');
 
-  const showTimepicker = () => {
-    showMode('time');
-  };
   return (
-    <View style={[styles.scene, {backgroundColor: '#ff4081'}]}>
+    <View style={styles.scene}>
       <TextInput
         label="Tytuł"
         returnKeyType="next"
         value={title}
         onChangeText={(text: string) => setTitle(text)}
         autoCapitalize="none"
+        errorText={undefined}
+        description={undefined}
       />
       <View style={styles.dateIcons}>
+        <Paragraph>Czas zaśnięcia </Paragraph>
         <IconButton
-          onPress={showDatepicker}
+          onPress={() => setOpen(true)}
           icon="calendar"
           size={30}
           color={theme.colors.primary}
         />
+
+        <Paragraph>{moment(startDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
+      </View>
+      <View style={styles.dateIcons}>
+        <Paragraph>Czas obudzenia</Paragraph>
         <IconButton
-          onPress={showTimepicker}
-          icon="clock-outline"
+          onPress={() => setOpen2(true)}
+          icon="calendar"
           size={30}
           color={theme.colors.primary}
         />
-        <Paragraph>{date.toISOString()}</Paragraph>
+
+        <Paragraph>{moment(startDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
       </View>
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
+
       <TextInput
         label="Treść"
         returnKeyType="next"
@@ -70,8 +60,56 @@ export function DreamDescription() {
         autoCapitalize="none"
         multiline={true}
         numberOfLines={10}
+        errorText={undefined}
+        description={undefined}
+      />
+      <RNPickerSelect
+        onValueChange={(value: any) => console.log(value)}
+        items={[
+          {label: 'Football', value: 'football'},
+          {label: 'Baseball', value: 'baseball'},
+          {label: 'Hockey', value: 'hockey'},
+        ]}
       />
       <Button mode="contained">Dalej</Button>
+      <DatePicker
+        modal
+        open={open}
+        date={startDate}
+        androidVariant="iosClone"
+        title="Sen rozpoczął się.."
+        textColor={theme.colors.primary}
+        locale={'pl'}
+        confirmText="Zatwierdź"
+        cancelText="Anuluj"
+        is24hourSource="locale"
+        onConfirm={date => {
+          setOpen(false);
+          setStartDate(date);
+        }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+      />
+      <DatePicker
+        modal
+        open={open2}
+        date={endDate}
+        androidVariant="iosClone"
+        title="Sen zakończył się.."
+        textColor={theme.colors.primary}
+        locale={'pl'}
+        confirmText="Zatwierdź"
+        cancelText="Anuluj"
+        is24hourSource="locale"
+        onConfirm={date => {
+          setOpen2(false);
+          setEndDate(date);
+        }}
+        onCancel={() => {
+          setOpen2(false);
+        }}
+      />
     </View>
   );
 }
@@ -85,5 +123,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
+    justifyContent: 'space-between',
   },
 });
