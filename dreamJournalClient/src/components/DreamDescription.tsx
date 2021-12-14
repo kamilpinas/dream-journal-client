@@ -31,25 +31,24 @@ export function DreamDescription() {
       />
       <View style={styles.dateIcons}>
         <Paragraph>Czas zaśnięcia </Paragraph>
+        <Paragraph>{moment(startDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
         <IconButton
           onPress={() => setOpen(true)}
           icon="calendar"
           size={30}
           color={theme.colors.primary}
         />
-
-        <Paragraph>{moment(startDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
       </View>
+
       <View style={styles.dateIcons}>
         <Paragraph>Czas obudzenia</Paragraph>
+        <Paragraph>{moment(endDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
         <IconButton
           onPress={() => setOpen2(true)}
           icon="calendar"
           size={30}
           color={theme.colors.primary}
         />
-
-        <Paragraph>{moment(startDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
       </View>
 
       <TextInput

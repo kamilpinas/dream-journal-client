@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {View, StyleSheet, Dimensions, SafeAreaView, Modal} from 'react-native';
 import {TabView, SceneMap} from 'react-native-tab-view';
+import {AnalysisModal} from './AnalysisModal';
 import {DreamDescription} from './DreamDescription';
 
-const SecondRoute = () => <View style={{backgroundColor: '#673ab7'}} />;
 const ThirdRoute = () => <View style={{backgroundColor: '#545dfd'}} />;
 
 interface NewDreamModalProps {
@@ -30,7 +30,7 @@ export class NewDreamModal extends React.Component<NewDreamModalProps> {
             navigationState={this.state}
             renderScene={SceneMap({
               description: DreamDescription,
-              analysis: SecondRoute,
+              analysis: AnalysisModal,
               consciousness: ThirdRoute,
             })}
             onIndexChange={(index: any) => this.setState({index})}
