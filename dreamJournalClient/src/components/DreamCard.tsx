@@ -9,6 +9,7 @@ interface DreamCardProps {
   date?: string;
   icon?: IconSource;
   size?: number;
+  onPress?: () => void;
 }
 const LeftContent = (props: DreamCardProps) => (
   <Avatar.Icon
@@ -19,7 +20,7 @@ const LeftContent = (props: DreamCardProps) => (
 );
 
 export const DreamCard = (props: DreamCardProps) => (
-  <Card style={styles.card}>
+  <Card style={styles.card} onPress={props.onPress}>
     <Card.Title
       title={props.title}
       subtitle={props.date}

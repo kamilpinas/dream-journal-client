@@ -7,88 +7,111 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Fab} from '../components/Fab';
 import {NewDreamModal} from '../components/NewDreamModal';
+import {Searchbar} from 'react-native-paper';
 
 export default function JournalScreen(navigation: any) {
   const [openModal, setOpenModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <SafeAreaView style={styles.container}>
       <Header style={styles.header}>Dziennik</Header>
       <ScrollView style={styles.scrollView}>
+        <Searchbar
+          placeholder="Szukaj"
+          onChangeText={value => setSearchQuery(value)}
+          value={searchQuery}
+        />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Super mily sen to byl bardzo"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
         <DreamCard
           title="Dzik jest bardzo zły"
           date={moment().format('YYYY-MM-DD')}
           content="lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum lotem ipsum "
           icon="camera"
+          onPress={() => setOpenModal(true)}
         />
       </ScrollView>
-      <Fab label="Dodaj sen" onClick={() => setOpenModal(!openModal)} />
-      <NewDreamModal modalVisible={openModal} />
+      <Fab label="Dodaj sen" onClick={() => setOpenModal(true)} />
+      <NewDreamModal
+        showModal={openModal}
+        toggle={() => setOpenModal(!openModal)}
+      />
     </SafeAreaView>
   );
 }

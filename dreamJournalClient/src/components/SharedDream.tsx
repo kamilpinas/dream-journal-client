@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ImageBackground, StyleSheet, View} from 'react-native';
-import {IconButton, Paragraph, Title} from 'react-native-paper';
+import {Button, IconButton, Paragraph, Title} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import {theme} from '../core/theme';
 
@@ -24,17 +24,45 @@ export const SharedDreamCard = (props: SharedDreamCardProps) => (
           {props.sharedOn}
         </Paragraph>
         <Title style={styles.title}>{props.title}</Title>
-        <Paragraph style={styles.text} ellipsizeMode="tail" numberOfLines={20}>
+        <Paragraph style={styles.text} ellipsizeMode="tail" numberOfLines={18}>
           {props.content}
         </Paragraph>
         <Paragraph
           style={{marginTop: 12, textAlign: 'right', fontStyle: 'italic'}}>
           {props.user}
         </Paragraph>
-        <View style={styles.grades}>
-          <IconButton icon="thumb-down" size={40} color={theme.colors.error} />
-          <Paragraph>({props.votes})</Paragraph>
-          <IconButton icon="thumb-up" size={40} color={theme.colors.success} />
+        <View
+          style={{
+            marginTop: 'auto',
+            marginBottom: 40,
+          }}>
+          <View style={styles.grades}>
+            <IconButton
+              icon="thumb-down"
+              size={40}
+              color={theme.colors.error}
+            />
+            <Paragraph>({props.votes})</Paragraph>
+            <IconButton
+              icon="thumb-up"
+              size={40}
+              color={theme.colors.success}
+            />
+          </View>
+          <View style={styles.grades}>
+            <Button
+              icon="dice-multiple"
+              mode="outlined"
+              color={theme.colors.primary}>
+              Losuj
+            </Button>
+            <Button
+              icon="playlist-edit"
+              mode="contained"
+              color={theme.colors.primary}>
+              Kategoria
+            </Button>
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -53,9 +81,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignContent: 'center',
-    marginTop: 'auto',
-    marginBottom: 20,
   },
   image: {
     width: '100%',

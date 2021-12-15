@@ -7,10 +7,11 @@ import {IconButton, Paragraph} from 'react-native-paper';
 import {theme} from '../core/theme';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
+import BackButton from './BackButton';
 
 interface DreamDescriptionProps {}
 
-export function DreamDescription() {
+export function DreamDescription(show: boolean) {
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -70,7 +71,6 @@ export function DreamDescription() {
           {label: 'Hockey', value: 'hockey'},
         ]}
       />
-      <Button mode="contained">Dalej</Button>
       <DatePicker
         modal
         open={open}
@@ -116,6 +116,8 @@ export function DreamDescription() {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     padding: 30,
   },
   dateIcons: {
