@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import TextInput from './TextInput';
 import DatePicker from 'react-native-date-picker';
@@ -8,6 +8,7 @@ import {theme} from '../core/theme';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
 import BackButton from './BackButton';
+import {instance} from '../api/axios';
 
 interface DreamDescriptionProps {}
 
@@ -18,6 +19,23 @@ export function DreamDescription(show: boolean) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
+  const [category, setCategory] = useState();
+
+  function getCategories() {
+    instance
+      .get('categories')
+      .then(async function (response) {
+        setSelectedValue(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   return (
     <View style={styles.scene}>
@@ -64,7 +82,8 @@ export function DreamDescription(show: boolean) {
         description={undefined}
       />
       <RNPickerSelect
-        onValueChange={(value: any) => console.log(value)}
+        value={category}
+        onValueChange={(value: any) => setCategory(value)}
         items={[
           {label: 'Football', value: 'football'},
           {label: 'Baseball', value: 'baseball'},
