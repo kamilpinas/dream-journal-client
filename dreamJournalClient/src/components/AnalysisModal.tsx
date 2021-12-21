@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import Button from './Button';
 import {Paragraph, Switch} from 'react-native-paper';
-
 import {SliderLevel} from './Slider';
-import {theme} from '../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import {DreamModel} from '../models/dream';
 
-interface AnalysisModalProps {}
+interface AnalysisModalProps {
+  dream: Partial<DreamModel>;
+  setNewDream: (dream: Partial<DreamModel>) => void;
+}
 
 interface Item {
   name: string;
@@ -16,10 +17,8 @@ interface Item {
   children: Array<{name: string; id: number}>;
 }
 
-export function AnalysisModal() {
-  const [sleepLevel, setSleepLevel] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
+export function AnalysisModal(props: AnalysisModalProps) {
+  console.log('analysis', props.dream);
   const [selectedItems, setSelectedItems] = useState<Array<Item>>();
   const items = [
     {
@@ -59,31 +58,51 @@ export function AnalysisModal() {
       <SliderLevel
         min={0}
         max={5}
-        value={sleepLevel}
+        value={props.dream.analysis?.sleepLevel || 0}
         step={1}
-        onChange={value => setSleepLevel(value)}
+        onChange={(value: number) =>
+          props.setNewDream({
+            ...props.dream,
+            analysis: {...props.dream.analysis, sleepLevel: value},
+          })
+        }
         label={'Poziom wyspania'}
       />
       <SliderLevel
         min={0}
         max={5}
-        value={rating}
+        value={props.dream.analysis?.rating || 0}
         step={1}
-        onChange={value => setRating(value)}
+        onChange={(value: number) =>
+          props.setNewDream({
+            ...props.dream,
+            analysis: {...props.dream.analysis, rating: value},
+          })
+        }
         label={'Ocena snu'}
       />
       <View style={styles.spaceBetween}>
         <Paragraph>Czy był to koszmar?</Paragraph>
         <Switch
-          value={isSwitchOn}
-          onValueChange={() => setIsSwitchOn(!isSwitchOn)}
+          value={props.dream.analysis?.isNightmare || false}
+          onValueChange={value =>
+            props.setNewDream({
+              ...props.dream,
+              analysis: {...props.dream.analysis, isNightmare: value},
+            })
+          }
         />
       </View>
       <View style={styles.spaceBetween}>
         <Paragraph>Czy wpłynął na twoje samopoczucie?</Paragraph>
         <Switch
-          value={isSwitchOn}
-          onValueChange={() => setIsSwitchOn(!isSwitchOn)}
+          value={props.dream.analysis?.isMoodAffecting || false}
+          onValueChange={value =>
+            props.setNewDream({
+              ...props.dream,
+              analysis: {...props.dream.analysis, isMoodAffecting: value},
+            })
+          }
         />
       </View>
       <SectionedMultiSelect

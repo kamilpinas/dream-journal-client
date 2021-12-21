@@ -10,6 +10,7 @@ import BackButton from '../components/BackButton';
 import {theme} from '../core/theme';
 import {emailValidator} from '../helpers/emailValidator';
 import {passwordValidator} from '../helpers/passwordValidator';
+import {instance} from '../api/axios';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState({value: '', error: ''});
@@ -23,12 +24,26 @@ export default function LoginScreen({navigation}) {
       setPassword({...password, error: passwordError});
       return;
     }
+    loginUser();
     navigation.reset({
       index: 0,
       routes: [{name: 'Dashboard'}],
     });
   };
 
+  function loginUser() {
+    instance
+      .post('auth/login', {
+        email: email.value,
+        password: password.value,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />

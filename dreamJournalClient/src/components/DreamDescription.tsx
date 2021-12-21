@@ -2,31 +2,32 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import TextInput from './TextInput';
 import DatePicker from 'react-native-date-picker';
-import Button from './Button';
 import {IconButton, Paragraph} from 'react-native-paper';
 import {theme} from '../core/theme';
 import moment from 'moment';
-import RNPickerSelect from 'react-native-picker-select';
-import BackButton from './BackButton';
+import RNPickerSelect, {Item} from 'react-native-picker-select';
 import {instance} from '../api/axios';
+import {mapStringsToItems} from '../api/helpers/mappings';
+import {DreamModel} from '../models/dream';
 
-interface DreamDescriptionProps {}
+interface DreamDescriptionProps {
+  dream: Partial<DreamModel>;
+  setNewDream: (dream: Partial<DreamModel>) => void;
+}
 
-export function DreamDescription(show: boolean) {
-  const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+export function DreamDescription(props: DreamDescriptionProps) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
-  const [category, setCategory] = useState();
-
+  const [categories, setCategories] = useState<Array<Item>>([]);
   function getCategories() {
     instance
       .get('categories')
-      .then(async function (response) {
-        setSelectedValue(response.data);
-        console.log(response.data);
+      .then(function (response) {
+        setCategories(
+          mapStringsToItems(
+            response.data.docs.map((item: {name: any}) => item.name),
+          ),
+        );
       })
       .catch(function (error) {
         console.log(error);
@@ -35,6 +36,9 @@ export function DreamDescription(show: boolean) {
 
   useEffect(() => {
     getCategories();
+    return () => {
+      setCategories([]);
+    };
   }, []);
 
   return (
@@ -42,15 +46,17 @@ export function DreamDescription(show: boolean) {
       <TextInput
         label="Tytuł"
         returnKeyType="next"
-        value={title}
-        onChangeText={(text: string) => setTitle(text)}
+        value={props.dream.title}
+        onChangeText={(text: string) =>
+          props.setNewDream({...props.dream, title: text})
+        }
         autoCapitalize="none"
-        errorText={undefined}
-        description={undefined}
       />
       <View style={styles.dateIcons}>
         <Paragraph>Czas zaśnięcia </Paragraph>
-        <Paragraph>{moment(startDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
+        <Paragraph>
+          {moment(props.dream.startDate).format('YYYY-MM-DD HH:mm')}
+        </Paragraph>
         <IconButton
           onPress={() => setOpen(true)}
           icon="calendar"
@@ -61,7 +67,9 @@ export function DreamDescription(show: boolean) {
 
       <View style={styles.dateIcons}>
         <Paragraph>Czas obudzenia</Paragraph>
-        <Paragraph>{moment(endDate).format('YYYY-MM-DD HH:mm')}</Paragraph>
+        <Paragraph>
+          {moment(props.dream.endDate).format('YYYY-MM-DD HH:mm')}
+        </Paragraph>
         <IconButton
           onPress={() => setOpen2(true)}
           icon="calendar"
@@ -73,8 +81,10 @@ export function DreamDescription(show: boolean) {
       <TextInput
         label="Treść"
         returnKeyType="next"
-        value={title}
-        onChangeText={(text: string) => setTitle(text)}
+        value={props.dream.description}
+        onChangeText={(text: string) =>
+          props.setNewDream({...props.dream, description: text})
+        }
         autoCapitalize="none"
         multiline={true}
         numberOfLines={10}
@@ -82,18 +92,19 @@ export function DreamDescription(show: boolean) {
         description={undefined}
       />
       <RNPickerSelect
-        value={category}
-        onValueChange={(value: any) => setCategory(value)}
-        items={[
-          {label: 'Football', value: 'football'},
-          {label: 'Baseball', value: 'baseball'},
-          {label: 'Hockey', value: 'hockey'},
-        ]}
+        key={props.dream.category?.name}
+        placeholder={{value: 'Wybierz kategorie'}}
+        value={props.dream.category?.name}
+        // onValueChange={text =>
+        //   props.setNewDream({...props.dream, category: {name: text}})
+        // }
+        onValueChange={() => null}
+        items={categories}
       />
       <DatePicker
         modal
         open={open}
-        date={startDate}
+        date={props.dream.startDate || new Date()}
         androidVariant="iosClone"
         title="Sen rozpoczął się.."
         textColor={theme.colors.primary}
@@ -103,7 +114,7 @@ export function DreamDescription(show: boolean) {
         is24hourSource="locale"
         onConfirm={date => {
           setOpen(false);
-          setStartDate(date);
+          props.setNewDream({...props.dream, startDate: date});
         }}
         onCancel={() => {
           setOpen(false);
@@ -112,7 +123,7 @@ export function DreamDescription(show: boolean) {
       <DatePicker
         modal
         open={open2}
-        date={endDate}
+        date={props.dream.endDate || new Date()}
         androidVariant="iosClone"
         title="Sen zakończył się.."
         textColor={theme.colors.primary}
@@ -122,7 +133,7 @@ export function DreamDescription(show: boolean) {
         is24hourSource="locale"
         onConfirm={date => {
           setOpen2(false);
-          setEndDate(date);
+          props.setNewDream({...props.dream, endDate: date});
         }}
         onCancel={() => {
           setOpen2(false);

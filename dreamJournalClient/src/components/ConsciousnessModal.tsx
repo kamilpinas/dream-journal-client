@@ -1,34 +1,69 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Paragraph, Switch, Button} from 'react-native-paper';
+import {Paragraph, Switch} from 'react-native-paper';
+import {DreamModel} from '../models/dream';
 import {SliderLevel} from './Slider';
 
-export function ConsciousnessModal() {
-  const [rating, setRating] = useState(0);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [isSwitchOn2, setIsSwitchOn2] = useState(false);
+interface ConsciousnessModalProps {
+  dream: Partial<DreamModel>;
+  setNewDream: (dream: Partial<DreamModel>) => void;
+}
+export function ConsciousnessModal(props: ConsciousnessModalProps) {
   return (
     <View style={styles.scene}>
       <View style={styles.spaceBetween}>
         <Paragraph>Czy był świadomy?</Paragraph>
         <Switch
-          value={isSwitchOn}
-          onValueChange={() => setIsSwitchOn(!isSwitchOn)}
+          value={props.dream.analysis?.consciousness?.isConsciousness || false}
+          onValueChange={value =>
+            props.setNewDream({
+              ...props.dream,
+              analysis: {
+                ...props.dream.analysis,
+                consciousness: {
+                  ...props.dream.analysis?.consciousness,
+                  isConsciousness: value,
+                },
+              },
+            })
+          }
         />
       </View>
       <View style={styles.spaceBetween}>
         <Paragraph>Czy był kontrolowany?</Paragraph>
         <Switch
-          value={isSwitchOn2}
-          onValueChange={() => setIsSwitchOn2(!isSwitchOn2)}
+          value={props.dream.analysis?.consciousness?.isControled || false}
+          onValueChange={value =>
+            props.setNewDream({
+              ...props.dream,
+              analysis: {
+                ...props.dream.analysis,
+                consciousness: {
+                  ...props.dream.analysis?.consciousness,
+                  isControled: value,
+                },
+              },
+            })
+          }
         />
       </View>
       <SliderLevel
         min={0}
         max={5}
-        value={rating}
+        value={props.dream.analysis?.consciousness?.lucidityLevel || 0}
         step={1}
-        onChange={value => setRating(value)}
+        onChange={(value: number) =>
+          props.setNewDream({
+            ...props.dream,
+            analysis: {
+              ...props.dream.analysis,
+              consciousness: {
+                ...props.dream.analysis?.consciousness,
+                lucidityLevel: value,
+              },
+            },
+          })
+        }
         label={'Poziom świadomości'}
       />
     </View>
