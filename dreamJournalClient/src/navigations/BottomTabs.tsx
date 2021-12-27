@@ -77,8 +77,6 @@ export default function BottomTabs() {
               icon="teach"
             />
           ),
-
-          tabBarInactiveBackgroundColor: '#681bb0',
           tabBarLabel: props => (
             <BarLabel
               {...props}
@@ -106,9 +104,7 @@ export default function BottomTabs() {
           tabBarLabel: props => (
             <BarLabel
               {...props}
-              ccolor={
-                props.focused ? theme.colors.primary : theme.colors.white
-              }>
+              color={props.focused ? theme.colors.primary : theme.colors.white}>
               Statystyki
             </BarLabel>
           ),

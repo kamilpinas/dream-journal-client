@@ -1,30 +1,25 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Paragraph, Switch} from 'react-native-paper';
-import {DreamModel} from '../models/dream';
+import {ConsciousnessModel} from '../models/consciousness';
 import {SliderLevel} from './Slider';
 
 interface ConsciousnessModalProps {
-  dream: Partial<DreamModel>;
-  setNewDream: (dream: Partial<DreamModel>) => void;
+  consciousness?: ConsciousnessModel;
+  setNewConsciousness: (dream: Partial<ConsciousnessModel>) => void;
 }
-export function ConsciousnessModal(props: ConsciousnessModalProps) {
+export function ConsciousnessModa(props: ConsciousnessModalProps) {
+  console.log('consciouss modal');
   return (
     <View style={styles.scene}>
       <View style={styles.spaceBetween}>
         <Paragraph>Czy był świadomy?</Paragraph>
         <Switch
-          value={props.dream.analysis?.consciousness?.isConsciousness || false}
+          value={props.consciousness?.isConsciousness || false}
           onValueChange={value =>
-            props.setNewDream({
-              ...props.dream,
-              analysis: {
-                ...props.dream.analysis,
-                consciousness: {
-                  ...props.dream.analysis?.consciousness,
-                  isConsciousness: value,
-                },
-              },
+            props.setNewConsciousness({
+              ...props.consciousness,
+              isConsciousness: value,
             })
           }
         />
@@ -32,17 +27,11 @@ export function ConsciousnessModal(props: ConsciousnessModalProps) {
       <View style={styles.spaceBetween}>
         <Paragraph>Czy był kontrolowany?</Paragraph>
         <Switch
-          value={props.dream.analysis?.consciousness?.isControled || false}
+          value={props.consciousness?.isControled || false}
           onValueChange={value =>
-            props.setNewDream({
-              ...props.dream,
-              analysis: {
-                ...props.dream.analysis,
-                consciousness: {
-                  ...props.dream.analysis?.consciousness,
-                  isControled: value,
-                },
-              },
+            props.setNewConsciousness({
+              ...props.consciousness,
+              isControled: value,
             })
           }
         />
@@ -50,18 +39,12 @@ export function ConsciousnessModal(props: ConsciousnessModalProps) {
       <SliderLevel
         min={0}
         max={5}
-        value={props.dream.analysis?.consciousness?.lucidityLevel || 0}
+        value={props.consciousness?.lucidityLevel || 0}
         step={1}
         onChange={(value: number) =>
-          props.setNewDream({
-            ...props.dream,
-            analysis: {
-              ...props.dream.analysis,
-              consciousness: {
-                ...props.dream.analysis?.consciousness,
-                lucidityLevel: value,
-              },
-            },
+          props.setNewConsciousness({
+            ...props.consciousness,
+            lucidityLevel: value,
           })
         }
         label={'Poziom świadomości'}
@@ -84,3 +67,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
+
+export const ConsciousnessModal = React.memo(ConsciousnessModa);

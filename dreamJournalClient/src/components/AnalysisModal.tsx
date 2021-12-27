@@ -4,11 +4,11 @@ import {Paragraph, Switch} from 'react-native-paper';
 import {SliderLevel} from './Slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import {DreamModel} from '../models/dream';
+import {AnalysisModel} from '../models/analysis';
 
 interface AnalysisModalProps {
-  dream: Partial<DreamModel>;
-  setNewDream: (dream: Partial<DreamModel>) => void;
+  analysis?: AnalysisModel;
+  setNewAnalysis: (dream: Partial<AnalysisModel>) => void;
 }
 
 interface Item {
@@ -17,8 +17,8 @@ interface Item {
   children: Array<{name: string; id: number}>;
 }
 
-export function AnalysisModal(props: AnalysisModalProps) {
-  console.log('analysis', props.dream);
+export function AnalysisModa(props: AnalysisModalProps) {
+  console.log('analysis');
   const [selectedItems, setSelectedItems] = useState<Array<Item>>();
   const items = [
     {
@@ -58,12 +58,12 @@ export function AnalysisModal(props: AnalysisModalProps) {
       <SliderLevel
         min={0}
         max={5}
-        value={props.dream.analysis?.sleepLevel || 0}
+        value={props.analysis?.sleepLevel || 0}
         step={1}
         onChange={(value: number) =>
-          props.setNewDream({
-            ...props.dream,
-            analysis: {...props.dream.analysis, sleepLevel: value},
+          props.setNewAnalysis({
+            ...props.analysis,
+            sleepLevel: value,
           })
         }
         label={'Poziom wyspania'}
@@ -71,12 +71,12 @@ export function AnalysisModal(props: AnalysisModalProps) {
       <SliderLevel
         min={0}
         max={5}
-        value={props.dream.analysis?.rating || 0}
+        value={props.analysis?.rating || 0}
         step={1}
         onChange={(value: number) =>
-          props.setNewDream({
-            ...props.dream,
-            analysis: {...props.dream.analysis, rating: value},
+          props.setNewAnalysis({
+            ...props.analysis,
+            rating: value,
           })
         }
         label={'Ocena snu'}
@@ -84,11 +84,11 @@ export function AnalysisModal(props: AnalysisModalProps) {
       <View style={styles.spaceBetween}>
         <Paragraph>Czy był to koszmar?</Paragraph>
         <Switch
-          value={props.dream.analysis?.isNightmare || false}
+          value={props.analysis?.isNightmare || false}
           onValueChange={value =>
-            props.setNewDream({
-              ...props.dream,
-              analysis: {...props.dream.analysis, isNightmare: value},
+            props.setNewAnalysis({
+              ...props.analysis,
+              isNightmare: value,
             })
           }
         />
@@ -96,11 +96,11 @@ export function AnalysisModal(props: AnalysisModalProps) {
       <View style={styles.spaceBetween}>
         <Paragraph>Czy wpłynął na twoje samopoczucie?</Paragraph>
         <Switch
-          value={props.dream.analysis?.isMoodAffecting || false}
+          value={props.analysis?.isMoodAffecting || false}
           onValueChange={value =>
-            props.setNewDream({
-              ...props.dream,
-              analysis: {...props.dream.analysis, isMoodAffecting: value},
+            props.setNewAnalysis({
+              ...props.analysis,
+              isMoodAffecting: value,
             })
           }
         />
@@ -134,3 +134,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
+
+export const AnalysisModal = React.memo(AnalysisModa);

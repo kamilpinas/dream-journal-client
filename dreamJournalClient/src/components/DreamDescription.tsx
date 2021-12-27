@@ -15,10 +15,11 @@ interface DreamDescriptionProps {
   setNewDream: (dream: Partial<DreamModel>) => void;
 }
 
-export function DreamDescription(props: DreamDescriptionProps) {
+export function DreamDescriptio(props: DreamDescriptionProps) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [categories, setCategories] = useState<Array<Item>>([]);
+  console.log('dream desc');
   function getCategories() {
     instance
       .get('categories')
@@ -95,10 +96,9 @@ export function DreamDescription(props: DreamDescriptionProps) {
         key={props.dream.category?.name}
         placeholder={{value: 'Wybierz kategorie'}}
         value={props.dream.category?.name}
-        // onValueChange={text =>
-        //   props.setNewDream({...props.dream, category: {name: text}})
-        // }
-        onValueChange={() => null}
+        onValueChange={text =>
+          props.setNewDream({...props.dream, category: {name: text}})
+        }
         items={categories}
       />
       <DatePicker
@@ -157,3 +157,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
+
+export const DreamDescription = React.memo(DreamDescriptio);

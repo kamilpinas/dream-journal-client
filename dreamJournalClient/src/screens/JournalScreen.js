@@ -9,7 +9,7 @@ import {Fab} from '../components/Fab';
 import {NewDreamModal} from '../components/NewDreamModal';
 import {Searchbar} from 'react-native-paper';
 
-export default function JournalScreen(navigation: any) {
+export default function JournalScreen({navigation}) {
   const [openModal, setOpenModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -107,11 +107,11 @@ export default function JournalScreen(navigation: any) {
           onPress={() => setOpenModal(true)}
         />
       </ScrollView>
-      <Fab label="Dodaj sen" onClick={() => setOpenModal(true)} />
-      <NewDreamModal
+      <Fab label="Dodaj sen" onClick={() => navigation.navigate('NewDream')} />
+      {/* <NewDreamModal
         showModal={openModal}
         toggle={() => setOpenModal(!openModal)}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

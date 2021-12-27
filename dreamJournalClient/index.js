@@ -12,6 +12,7 @@ import {
   ResetPasswordScreen,
   Dashboard,
 } from './src/screens';
+import {NewDreamModal} from './src/components/NewDreamModal';
 import BottomTabs from './src/navigations/BottomTabs';
 const Stack = createStackNavigator();
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="Dashboard" component={BottomTabs} />
+          <Stack.Screen name="NewDream" component={NewDreamModal} />
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}
