@@ -9,7 +9,6 @@ interface ConsciousnessModalProps {
   setNewConsciousness: (dream: Partial<ConsciousnessModel>) => void;
 }
 export function ConsciousnessModa(props: ConsciousnessModalProps) {
-  console.log('consciouss modal');
   return (
     <View style={styles.scene}>
       <View style={styles.spaceBetween}>
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: 30,
+    padding: 50,
   },
   spaceBetween: {
     flexDirection: 'row',

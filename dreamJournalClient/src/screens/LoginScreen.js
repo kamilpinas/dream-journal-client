@@ -10,7 +10,8 @@ import BackButton from '../components/BackButton';
 import {theme} from '../core/theme';
 import {emailValidator} from '../helpers/emailValidator';
 import {passwordValidator} from '../helpers/passwordValidator';
-import {instance} from '../api/axios';
+import instance from '../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState({value: '', error: ''});
@@ -25,25 +26,33 @@ export default function LoginScreen({navigation}) {
       return;
     }
     loginUser();
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'Dashboard'}],
-    });
   };
 
-  function loginUser() {
-    instance
-      .post('auth/login', {
+  async function loginUser() {
+    try {
+      const response = await instance.post('auth/login', {
         email: email.value,
         password: password.value,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+      await AsyncStorage.setItem('token', response.data.token);
+      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Dashboard'}],
+      });
+    } catch (err) {
+      if (err.response.status === 404) {
+        setEmail({
+          ...email,
+          error: 'Użytkownik o podanym adresie e-mail nie istnieje',
+        });
+      }
+      if (err.response.status === 409) {
+        setPassword({...password, error: 'Podane hasło jest nieprawidłowe'});
+      }
+    }
   }
+
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />

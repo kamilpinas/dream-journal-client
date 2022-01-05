@@ -1,5 +1,5 @@
-import {AnalysisModel} from './analysis';
-import {CategoryModel} from './category';
+import {AnalysisModel, defaultAnalysis} from './analysis';
+import {CategoryModel, defaultCategory} from './category';
 
 export interface DreamModel {
   title: string;
@@ -9,3 +9,12 @@ export interface DreamModel {
   category: CategoryModel;
   analysis: AnalysisModel;
 }
+
+export const defaultDream = {
+  title: '',
+  description: '',
+  startDate: new Date(),
+  endDate: new Date(),
+  category: defaultCategory,
+  analysis: defaultAnalysis,
+};

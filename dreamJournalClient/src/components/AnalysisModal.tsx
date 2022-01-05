@@ -1,58 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Paragraph, Switch} from 'react-native-paper';
 import {SliderLevel} from './Slider';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import iconSet from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import {AnalysisModel} from '../models/analysis';
-
+import {theme} from '../core/theme';
+import instance from '../api/axios';
+//import {mapEmotionsToEmotionItems} from '../api/helpers/mappings';
+import _ from 'lodash';
+import {groupBy, mapToApiEmotions} from '../api/helpers/mappings';
 interface AnalysisModalProps {
   analysis?: AnalysisModel;
   setNewAnalysis: (dream: Partial<AnalysisModel>) => void;
 }
 
-interface Item {
-  name: string;
-  id: number;
-  children: Array<{name: string; id: number}>;
+export interface EmotionItem {
+  type: string;
+  id?: number;
+  children: Array<{name: string}>;
 }
 
 export function AnalysisModa(props: AnalysisModalProps) {
-  console.log('analysis');
-  const [selectedItems, setSelectedItems] = useState<Array<Item>>();
-  const items = [
-    {
-      name: 'Fruits',
-      id: 0,
-      children: [
-        {
-          name: 'Apple',
-          id: 10,
-        },
-        {
-          name: 'Strawberry',
-          id: 17,
-        },
-        {
-          name: 'Pineapple',
-          id: 13,
-        },
-        {
-          name: 'Banana',
-          id: 14,
-        },
-        {
-          name: 'Watermelon',
-          id: 15,
-        },
-        {
-          name: 'Kiwi fruit',
-          id: 16,
-        },
-      ],
-    },
-  ];
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [items, setItems] = useState<Array<EmotionItem>>([]);
+  function getEmotions() {
+    instance
+      .get('emotions')
+      .then(function (response) {
+        const grouped = groupBy(response.data.docs, 'type').map(item => ({
+          ...item,
+          children: groupBy(item.children, 'name'),
+        }));
+        console.log('MAPPING', grouped);
+        setItems(grouped);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
+  useEffect(() => {
+    getEmotions();
+    return () => {
+      setItems([]);
+    };
+  }, []);
+  console.log('MAPOWANIE JEBANE!', mapToApiEmotions(items, selectedItems));
   return (
     <View style={styles.scene}>
       <SliderLevel
@@ -106,15 +100,28 @@ export function AnalysisModa(props: AnalysisModalProps) {
         />
       </View>
       <SectionedMultiSelect
-        IconRenderer={Icon}
+        IconRenderer={iconSet}
         items={items}
-        uniqueKey="id"
+        uniqueKey="name"
         subKey="children"
-        selectText="Choose some things..."
+        displayKey="name"
+        selectText="Wybierz emocje..."
+        selectedText="wybranych"
+        confirmText="Zapisz"
+        searchPlaceholderText="Szukaj.."
         showDropDowns={true}
         readOnlyHeadings={true}
-        onSelectedItemsChange={array => setSelectedItems(array)}
+        onSelectedItemsChange={array => {
+          setSelectedItems(array);
+        }}
         selectedItems={selectedItems}
+        onConfirm={() => {
+          props.setNewAnalysis({
+            ...props.analysis,
+            emotions: mapToApiEmotions(items, selectedItems),
+          });
+        }}
+        colors={{primary: theme.colors.primary, text: theme.colors.primary}}
       />
     </View>
   );
@@ -125,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: 30,
+    padding: 50,
   },
   spaceBetween: {
     flexDirection: 'row',

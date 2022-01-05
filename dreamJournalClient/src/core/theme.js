@@ -8,12 +8,12 @@ export const theme = {
     white: '#fff',
     primary: '#560CCE',
     secondary: '#414757',
-    error: '#ca1e3b',
-    success: '#3ac75d',
+    error: '#a81930',
+    success: '#1b9e3c',
   },
   fontSizes: {
     primary: 16,
     secondary: 12,
-    title: 21,
+    title: 22,
   },
 };

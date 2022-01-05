@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {StyleSheet} from 'react-native';
-import {Avatar, Card} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Avatar, Card, IconButton, Paragraph, Title} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
 interface DreamCardProps {
@@ -10,24 +10,26 @@ interface DreamCardProps {
   icon?: IconSource;
   size?: number;
   onPress?: () => void;
+  onDelete?: () => void;
+  onShare?: () => void;
 }
-const LeftContent = (props: DreamCardProps) => (
-  <Avatar.Icon
-    color="#fff"
-    size={30}
-    icon={props.icon || 'emoticon-happy-outline'}
-  />
-);
 
 export const DreamCard = (props: DreamCardProps) => (
   <Card style={styles.card} onPress={props.onPress}>
-    <Card.Title
-      title={props.title}
-      subtitle={props.date}
-      left={LeftContent}
-      titleStyle={styles.cardTitle}
-      subtitleStyle={styles.cardSubtitle}
-    />
+    <View style={styles.inlineCard}>
+      <View style={styles.left}>
+        <Avatar.Icon
+          color="#fff"
+          size={35}
+          icon={props.icon || 'emoticon-happy'}
+        />
+        <Paragraph style={{paddingLeft: 20}}>{props.title}</Paragraph>
+      </View>
+      <View style={{flexDirection: 'row'}}>
+        <IconButton icon="share-variant" onPress={props.onShare} />
+        <IconButton icon="delete" onPress={props.onDelete} />
+      </View>
+    </View>
   </Card>
 );
 
@@ -44,5 +46,15 @@ const styles = StyleSheet.create({
   },
   cardSubtitle: {
     fontSize: 12,
+  },
+  inlineCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  left: {
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

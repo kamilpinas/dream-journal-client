@@ -5,6 +5,7 @@ import Logo from '../components/Logo';
 import Header from '../components/Header';
 import TextInput from '../components/TextInput';
 import Button from '../components/Button';
+import instance from '../api/axios';
 import {emailValidator} from '../helpers/emailValidator';
 
 export default function ResetPasswordScreen({navigation}) {
@@ -16,8 +17,27 @@ export default function ResetPasswordScreen({navigation}) {
       setEmail({...email, error: emailError});
       return;
     }
-    navigation.navigate('LoginScreen');
+    resetPassword();
   };
+
+  async function resetPassword() {
+    try {
+      const response = await instance.post('auth/forgot', {
+        email: email.value,
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'LoginScreen'}],
+      });
+    } catch (err) {
+      if (err.response.status === 404) {
+        setEmail({
+          ...email,
+          error: 'Użytkownik o podanym adresie e-mail nie istnieje',
+        });
+      }
+    }
+  }
 
   return (
     <Background>

@@ -3,3 +3,9 @@ export interface ConsciousnessModel {
   isControled?: boolean;
   lucidityLevel?: number;
 }
+
+export const defaultConsciousness = {
+  isConsciousness: false,
+  isControled: false,
+  lucidityLevel: 0,
+};

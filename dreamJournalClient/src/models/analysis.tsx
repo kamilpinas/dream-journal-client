@@ -1,5 +1,5 @@
-import {ConsciousnessModel} from './consciousness';
-import {EmotionModel} from './emotion';
+import {ConsciousnessModel, defaultConsciousness} from './consciousness';
+import {defaultEmotion, EmotionModel} from './emotion';
 
 export interface AnalysisModel {
   sleepLevel?: number;
@@ -9,3 +9,12 @@ export interface AnalysisModel {
   consciousness?: ConsciousnessModel;
   emotions?: Array<EmotionModel>;
 }
+
+export const defaultAnalysis = {
+  sleepLevel: 0,
+  rating: 0,
+  isNightmare: false,
+  isMoodAffecting: false,
+  consciousness: defaultConsciousness,
+  emotions: defaultEmotion,
+};

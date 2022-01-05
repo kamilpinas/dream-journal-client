@@ -12,6 +12,10 @@ interface SharedDreamCardProps {
   user: string;
   sharedOn: string;
   votes?: number;
+  onVoteUp: () => void;
+  onVoteDown: () => void;
+  onDraw: () => void;
+  onCategorySelect: () => void;
 }
 export const SharedDreamCard = (props: SharedDreamCardProps) => (
   <View style={styles.container}>
@@ -38,14 +42,16 @@ export const SharedDreamCard = (props: SharedDreamCardProps) => (
           }}>
           <View style={styles.grades}>
             <IconButton
-              icon="thumb-down"
+              icon="thumb-down-outline"
               size={40}
+              onPress={props.onVoteDown}
               color={theme.colors.error}
             />
-            <Paragraph>({props.votes})</Paragraph>
+            <Paragraph style={styles.voteNumber}>({props.votes})</Paragraph>
             <IconButton
-              icon="thumb-up"
+              icon="thumb-up-outline"
               size={40}
+              onPress={props.onVoteUp}
               color={theme.colors.success}
             />
           </View>
@@ -53,12 +59,14 @@ export const SharedDreamCard = (props: SharedDreamCardProps) => (
             <Button
               icon="dice-multiple"
               mode="outlined"
-              color={theme.colors.primary}>
+              color={theme.colors.primary}
+              onPress={props.onDraw}>
               Losuj
             </Button>
             <Button
               icon="playlist-edit"
               mode="contained"
+              onPress={props.onCategorySelect}
               color={theme.colors.primary}>
               Kategoria
             </Button>
@@ -91,5 +99,10 @@ const styles = StyleSheet.create({
   insideImage: {
     margin: 60,
     height: '100%',
+  },
+  voteNumber: {
+    fontSize: theme.fontSizes.primary,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });

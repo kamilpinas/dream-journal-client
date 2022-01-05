@@ -19,7 +19,7 @@ export const BarIcon = (props: BarIconProps) => {
       color={props.color}
       size={props.size}
       icon={props.icon}
-      style={{marginTop: 5}}
+      style={{marginTop: 25}}
     />
   );
 };
@@ -29,7 +29,7 @@ export const BarLabel = (props: BarLabelProps) => {
     <Text
       style={{
         fontSize: 10,
-        lineHeight: 20,
+        lineHeight: 30,
         textAlign: 'center',
         color: props.color,
       }}>

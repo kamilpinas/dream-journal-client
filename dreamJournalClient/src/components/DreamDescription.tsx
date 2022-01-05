@@ -6,7 +6,7 @@ import {IconButton, Paragraph} from 'react-native-paper';
 import {theme} from '../core/theme';
 import moment from 'moment';
 import RNPickerSelect, {Item} from 'react-native-picker-select';
-import {instance} from '../api/axios';
+import instance from '../api/axios';
 import {mapStringsToItems} from '../api/helpers/mappings';
 import {DreamModel} from '../models/dream';
 
@@ -19,7 +19,6 @@ export function DreamDescriptio(props: DreamDescriptionProps) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [categories, setCategories] = useState<Array<Item>>([]);
-  console.log('dream desc');
   function getCategories() {
     instance
       .get('categories')
@@ -94,7 +93,7 @@ export function DreamDescriptio(props: DreamDescriptionProps) {
       />
       <RNPickerSelect
         key={props.dream.category?.name}
-        placeholder={{value: 'Wybierz kategorie'}}
+        placeholder={{value: '', label: 'Wybierz kategorie..'}}
         value={props.dream.category?.name}
         onValueChange={text =>
           props.setNewDream({...props.dream, category: {name: text}})
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: 30,
+    padding: 50,
   },
   dateIcons: {
     flexDirection: 'row',

@@ -11,7 +11,7 @@ import {theme} from '../core/theme';
 import {emailValidator} from '../helpers/emailValidator';
 import {passwordValidator} from '../helpers/passwordValidator';
 import {nameValidator} from '../helpers/nameValidator';
-import {instance} from '../api/axios';
+import instance from '../api/axios';
 
 export default function RegisterScreen({navigation}) {
   const [name, setName] = useState({value: '', error: ''});
@@ -27,19 +27,24 @@ export default function RegisterScreen({navigation}) {
     setVisible(false);
   };
 
-  function registerUser() {
-    instance
-      .post('auth/register', {
+  async function registerUser() {
+    try {
+      const response = await instance.post('auth/register', {
         name: name.value,
         email: email.value,
         password: password.value,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+      showDialog();
+    } catch (err) {
+      if (err.response.status === 422) {
+        setEmail({
+          ...email,
+          error: 'Użytkownik o podanym adresie e-mail już istnieje',
+        });
+      }
+
+      console.log(err);
+    }
   }
 
   const onSignUpPressed = () => {
@@ -53,7 +58,6 @@ export default function RegisterScreen({navigation}) {
       return;
     } else {
       registerUser();
-      showDialog();
     }
   };
 

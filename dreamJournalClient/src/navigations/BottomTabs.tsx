@@ -17,6 +17,7 @@ export default function BottomTabs() {
       initialRouteName="notebook"
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {height: 55},
       }}>
       <Tab.Screen
         name="notebook"
