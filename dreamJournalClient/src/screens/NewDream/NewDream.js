@@ -1,23 +1,27 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import Swiper from 'react-native-swiper';
-import instance from '../api/axios';
-import {AnalysisModal} from './AnalysisModal';
+import instance from '../../api/axios';
+import {AnalysisScreen} from './AnalysisScreen';
 import {DreamDescription} from './DreamDescription';
-import {ConsciousnessModal} from './ConsciousnessModal';
-import {theme} from '../core/theme';
+import {ConsciousnessScreen} from './ConsciousnessScreen';
+import {theme} from '../../core/theme';
 import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function NewDream({navigation, route}) {
+  const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [userData, setUserData] = useState({});
   const [newDream, setNewDream] = useState(
     route.params !== undefined ? route.params.item : {},
   );
   const [dreamDesc, setDreamDesc] = useState(
     route.params !== undefined
       ? {
+          userId: userData._id,
           title: route.params.item.title,
           description: route.params.item.description,
           startDate: moment(route.params.item.startDate).toDate(),
@@ -33,8 +37,25 @@ export function NewDream({navigation, route}) {
     route.params !== undefined ? route.params.item.analysis.consciousness : {},
   );
 
+  const getUserData = async () => {
+    try {
+      const wg = await AsyncStorage.getItem('user');
+      setUserData(JSON.parse(wg));
+      setLoading(true);
+    } catch (err) {
+      setUserData({});
+    }
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getUserData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   const onIndexChanged = index => {
     setNewDream({
+      //userId: userData._id,
       ...newDream,
       ...dreamDesc,
       analysis: {...newAnalysis, consciousness: {...newConsc}},
@@ -58,14 +79,16 @@ export function NewDream({navigation, route}) {
   };
 
   function addDream() {
-    instance
-      .post('/dream', newDream)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (loading) {
+      instance
+        .post('/dream', {...newDream, userId: userData._id})
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   }
 
   function updateDream(id) {
@@ -78,7 +101,6 @@ export function NewDream({navigation, route}) {
         console.log(error);
       });
   }
-
   return (
     <>
       <View>
@@ -99,8 +121,11 @@ export function NewDream({navigation, route}) {
         index={activeIndex}
         activeDotColor={theme.colors.primary}>
         <DreamDescription dream={dreamDesc} setNewDream={setDreamDesc} />
-        <AnalysisModal analysis={newAnalysis} setNewAnalysis={setNewAnalysis} />
-        <ConsciousnessModal
+        <AnalysisScreen
+          analysis={newAnalysis}
+          setNewAnalysis={setNewAnalysis}
+        />
+        <ConsciousnessScreen
           consciousness={newConsc}
           setNewConsciousness={setNewConsc}
         />

@@ -9,8 +9,8 @@ interface SharedDreamCardProps {
   subtitle?: string;
   icon?: IconSource;
   content?: string;
-  user: string;
-  sharedOn: string;
+  user?: string;
+  sharedOn?: string;
   votes?: number;
   onVoteUp: () => void;
   onVoteDown: () => void;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BarIcon, BarLabel} from '../navigations/BottomBarComponents';
 import {
@@ -8,10 +8,22 @@ import {
   SettingsScreen,
   TechnicsScreen,
 } from '../screens';
+import PushNotification from 'react-native-push-notification';
 import {theme} from '../core/theme';
 
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
+  function createChannel() {
+    PushNotification.createChannel({
+      channelId: 'realityCheck',
+      channelName: 'Reality Check',
+    });
+  }
+
+  useEffect(() => {
+    createChannel();
+  }, []);
+
   return (
     <Tab.Navigator
       initialRouteName="notebook"

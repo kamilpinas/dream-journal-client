@@ -3,6 +3,7 @@ export function dreamToSharedDream(dream, username) {
     sharedOn: new Date(),
     votes: 0,
     username: username,
-    dream: dream,
+    description: dream.description,
+    category: dream.category,
   };
 }

@@ -58,7 +58,10 @@ export default function SettingsScreen({navigation}) {
         onPress={() => navigation.navigate('UserDataScreen', {item: userData})}>
         Dane użytkownika
       </Button>
-      <Button styles={styles.button} mode="contained">
+      <Button
+        styles={styles.button}
+        mode="contained"
+        onPress={() => navigation.navigate('Notifications')}>
         Powiadomienia
       </Button>
       <Button styles={styles.button} mode="contained" onPress={deleteUser}>

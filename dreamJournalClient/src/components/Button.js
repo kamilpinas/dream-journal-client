@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 10,
     paddingVertical: 2,
+    borderWidth: 1,
   },
   text: {
     fontWeight: 'bold',

@@ -9,6 +9,7 @@ interface DreamCardProps {
   date?: string;
   icon?: IconSource;
   size?: number;
+  isShared?: boolean;
   onPress?: () => void;
   onDelete?: () => void;
   onShare?: () => void;
@@ -26,8 +27,12 @@ export const DreamCard = (props: DreamCardProps) => (
         <Paragraph style={{paddingLeft: 20}}>{props.title}</Paragraph>
       </View>
       <View style={{flexDirection: 'row'}}>
-        <IconButton icon="share-variant" onPress={props.onShare} />
-        <IconButton icon="delete" onPress={props.onDelete} />
+        <IconButton
+          icon="share-variant"
+          onPress={props.onShare}
+          disabled={props.isShared}
+        />
+        <IconButton icon="delete" onPress={props.onDelete} animated />
       </View>
     </View>
   </Card>

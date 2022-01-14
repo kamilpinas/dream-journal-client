@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Paragraph, Switch} from 'react-native-paper';
-import {SliderLevel} from './Slider';
+import {SliderLevel} from '../../components/Slider';
 import iconSet from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import {AnalysisModel} from '../models/analysis';
-import {theme} from '../core/theme';
-import instance from '../api/axios';
-//import {mapEmotionsToEmotionItems} from '../api/helpers/mappings';
-import _ from 'lodash';
-import {groupBy, mapToApiEmotions} from '../api/helpers/mappings';
-interface AnalysisModalProps {
+import {AnalysisModel} from '../../models/analysis';
+import {theme} from '../../core/theme';
+import instance from '../../api/axios';
+import {groupBy, mapToApiEmotions} from '../../api/helpers/mappings';
+import Header from '../../components/Header';
+interface AnalysisScreenProps {
   analysis?: AnalysisModel;
   setNewAnalysis: (dream: Partial<AnalysisModel>) => void;
 }
@@ -21,7 +20,7 @@ export interface EmotionItem {
   children: Array<{name: string}>;
 }
 
-export function AnalysisModa(props: AnalysisModalProps) {
+export function AnalysisModa(props: AnalysisScreenProps) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState<Array<EmotionItem>>([]);
   function getEmotions() {
@@ -48,6 +47,10 @@ export function AnalysisModa(props: AnalysisModalProps) {
   }, []);
   console.log('MAPOWANIE JEBANE!', mapToApiEmotions(items, selectedItems));
   return (
+    <>
+      <View style={{alignItems: 'center'}}>
+        <Header>Analiza</Header>
+      </View>
     <View style={styles.scene}>
       <SliderLevel
         min={0}
@@ -124,6 +127,7 @@ export function AnalysisModa(props: AnalysisModalProps) {
         colors={{primary: theme.colors.primary, text: theme.colors.primary}}
       />
     </View>
+    </>
   );
 }
 
@@ -142,4 +146,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const AnalysisModal = React.memo(AnalysisModa);
+export const AnalysisScreen = React.memo(AnalysisModa);

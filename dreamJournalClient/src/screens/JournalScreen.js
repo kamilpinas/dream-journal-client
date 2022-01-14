@@ -9,17 +9,21 @@ import {Fab} from '../components/Fab';
 import {Searchbar, Button, Paragraph, Dialog, Portal} from 'react-native-paper';
 import instance from '../api/axios';
 import {categoryIcon} from '../helpers/categoryIcon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {dreamToSharedDream} from '../helpers/dreamToSharedDream';
 
 export const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
 export default function JournalScreen({navigation}) {
+  const [userData, setUserData] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [dreams, setDreams] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -51,8 +55,10 @@ export default function JournalScreen({navigation}) {
     instance
       .get('dream')
       .then(function (response) {
-        setFilteredData(response.data.docs);
-        setDreams(response.data.docs);
+        if (loading) {
+          setFilteredData(response.data.docs);
+          setDreams(response.data.docs);
+        }
       })
       .catch(function (error) {
         // handle error
@@ -72,18 +78,38 @@ export default function JournalScreen({navigation}) {
       });
   }
 
-  // function shareDream(dream,username) {
-  //   instance
-  //     .post('/dream/' + id, dreamToSharedDream(dream,username))
-  //     .then(function (response) {
-  //       console.log(response);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }
+  function updateIsShared(id) {
+    instance
+      .patch('/dream/isShared/' + id)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
+  function shareDream(dream) {
+    instance
+      .post('/shared-dreams', dreamToSharedDream(dream, userData.name))
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error.response);
+      });
+  }
+  const getUserData = async () => {
+    try {
+      const wg = await AsyncStorage.getItem('user');
+      setUserData(JSON.parse(wg));
+      setLoading(true);
+    } catch (err) {
+      setUserData({});
+    }
+  };
   useEffect(() => {
+    getUserData();
     getDreams();
   }, []);
 
@@ -100,6 +126,7 @@ export default function JournalScreen({navigation}) {
           onChangeText={value => searchFilterFunction(value)}
           value={searchQuery}
         />
+
         {filteredData.map(item => {
           return (
             <>
@@ -111,7 +138,12 @@ export default function JournalScreen({navigation}) {
                 icon={categoryIcon(item.category.name)}
                 onPress={() => navigation.navigate('NewDream', {item: item})}
                 onDelete={() => showDialog()}
-                //onShare={()=>shareDream(item,)}
+                isShared={item.isShared}
+                onShare={() => {
+                  shareDream(item);
+                  updateIsShared(item._id);
+                  getDreams();
+                }}
               />
               <Portal key={'portal ' + item._id}>
                 <Dialog visible={visible} onDismiss={hideDialog}>

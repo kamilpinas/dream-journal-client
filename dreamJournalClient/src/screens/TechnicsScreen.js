@@ -4,35 +4,45 @@ import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import {TechnicsCard} from '../components/TechnicsCard';
 import {theme} from '../core/theme';
 
-export default function TechnicsScreen() {
+export default function TechnicsScreen({navigation}) {
   return (
     <SafeAreaView>
       <Header style={styles.cardTitle}>Techniki świadomego snu</Header>
       <ScrollView style={styles.scrollView}>
         <TechnicsCard
-          imgSource={require('../assets/technics_1.png')}
-          title="pierwsza technika"
-          subtitle="pierwsza technika to bardzo fajna technika polecam"
+          imgSource={require('../assets/aim_small.png')}
+          title="Rozpocznij tutaj"
+          subtitle="Wprowadzenie do świadomego śnienia "
+          backgroundColor="#783bdb"
+          onPress={() => navigation.navigate('Intro')}
         />
         <TechnicsCard
-          imgSource={require('../assets/technics_2.png')}
-          title="druga technika"
-          subtitle="druga technika to bardzo fajna technika polecam"
+          imgSource={require('../assets/happy_small.png')}
+          title="Podstawy"
+          subtitle="Testy rzeczywistości"
+          backgroundColor="#3bb64bee"
+          onPress={() => navigation.navigate('RealityCheck')}
         />
         <TechnicsCard
-          imgSource={require('../assets/technics_3.png')}
-          title="trzecia technika"
-          subtitle="pierwsza technika to bardzo fajna technika polecam"
+          imgSource={require('../assets/journall_small.png')}
+          title="Podstawy"
+          subtitle="Dziennik snów"
+          backgroundColor="#c4ae34"
+          onPress={() => navigation.navigate('DreamJournal')}
         />
         <TechnicsCard
-          imgSource={require('../assets/technics_4.png')}
-          title="czwarta technika"
-          subtitle="czwarta technika to bardzo fajna technika polecam"
+          imgSource={require('../assets/wake-up_small.png')}
+          title="Wypróbuj techniki"
+          subtitle="WILD :"
+          backgroundColor="#e2407eeb"
+          onPress={() => navigation.navigate('WILD')}
         />
         <TechnicsCard
-          imgSource={require('../assets/technics_5.png')}
-          title="piata technika"
-          subtitle="piąta technika to bardzo fajna technika polecam"
+          imgSource={require('../assets/wake-up2_small.png')}
+          title="Wypróbuj techniki"
+          subtitle="MILD :"
+          backgroundColor="#45beb8eb"
+          onPress={() => navigation.navigate('MILD')}
         />
       </ScrollView>
     </SafeAreaView>

@@ -1,18 +1,28 @@
 import * as React from 'react';
 import {ImageSourcePropType, StyleSheet, View} from 'react-native';
-import {Button, Card, Paragraph, Title} from 'react-native-paper';
+import {Card, Paragraph, Title} from 'react-native-paper';
 import {theme} from '../core/theme';
 
 interface TechnicsCardProps {
+  imgSource: ImageSourcePropType;
   title?: string;
   subtitle?: string;
-  imgSource: ImageSourcePropType;
+  backgroundColor?: string;
+  onPress?: () => void;
 }
 
 export const TechnicsCard = (props: TechnicsCardProps) => (
   <View style={styles.technicsContainer}>
-    <Card style={styles.technicsCard}>
-      <Card.Cover style={{height: 100}} source={props.imgSource} />
+    <Card style={styles.technicsCard} onPress={props.onPress} mode="outlined">
+      <Card.Cover
+        style={{
+          width: '100%',
+          padding: 20,
+          alignSelf: 'center',
+          backgroundColor: props.backgroundColor,
+        }}
+        source={props.imgSource}
+      />
       <Card.Content>
         <Title style={styles.title}>{props.title}</Title>
         <Paragraph style={styles.subtitle}>{props.subtitle}</Paragraph>
@@ -34,11 +44,14 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   title: {
-    fontSize: theme.fontSizes.primary,
+    fontSize: theme.fontSizes.secondary,
     color: theme.colors.white,
+    fontWeight: 'normal',
     marginTop: -30,
   },
   subtitle: {
-    fontSize: theme.fontSizes.secondary,
+    fontSize: theme.fontSizes.primary,
+    marginTop: 10,
+    fontWeight: '900',
   },
 });

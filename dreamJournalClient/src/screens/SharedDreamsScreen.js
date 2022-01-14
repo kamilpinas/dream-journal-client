@@ -1,10 +1,9 @@
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import instance from '../api/axios';
-import {SharedDreamCard} from '../components/SharedDream';
+import {SharedDreamCard} from '../components/SharedDreamCard';
 
 export default function SharedDreamsScreen() {
-  //const [sharedDreams, setSharedDreams] = useState([]);
   const [sharedDream, setSharedDream] = useState();
   function getRandomDream() {
     instance
@@ -53,12 +52,12 @@ export default function SharedDreamsScreen() {
       }
       user={sharedDream && sharedDream.username}
       votes={sharedDream && sharedDream.votes}
-      title={sharedDream && sharedDream.dream.title}
-      content={sharedDream && sharedDream.dream.description}
+      //title={sharedDream && sharedDream.dream.title}
+      content={sharedDream && sharedDream.description}
       onVoteDown={() => decrement(sharedDream && sharedDream._id)}
       onVoteUp={() => increment(sharedDream && sharedDream._id)}
-      onCategorySelect={() => null}
       onDraw={getRandomDream}
+      onCategorySelect={() => null}
     />
   );
 }

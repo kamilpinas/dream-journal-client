@@ -10,6 +10,7 @@ interface SliderProps {
   step: number;
   value: number;
   label: string;
+  disabled?: boolean;
   onChange: (value: number) => void;
 }
 
@@ -28,6 +29,7 @@ export function SliderLevel(props: SliderProps) {
         value={props.value}
         thumbImage={require('../assets/sliderIcon.png')}
         step={props.step}
+        disabled={props.disabled}
         onValueChange={props.onChange}
         minimumTrackTintColor={theme.colors.primary}
         maximumTrackTintColor={theme.colors.secondary}
