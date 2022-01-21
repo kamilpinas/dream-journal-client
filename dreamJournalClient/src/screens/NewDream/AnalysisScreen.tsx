@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Paragraph, Switch} from 'react-native-paper';
+import {IconButton, Paragraph, Switch} from 'react-native-paper';
 import {SliderLevel} from '../../components/Slider';
 import iconSet from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
@@ -51,82 +51,93 @@ export function AnalysisModa(props: AnalysisScreenProps) {
       <View style={{alignItems: 'center'}}>
         <Header>Analiza</Header>
       </View>
-    <View style={styles.scene}>
-      <SliderLevel
-        min={0}
-        max={5}
-        value={props.analysis?.sleepLevel || 0}
-        step={1}
-        onChange={(value: number) =>
-          props.setNewAnalysis({
-            ...props.analysis,
-            sleepLevel: value,
-          })
-        }
-        label={'Poziom wyspania'}
-      />
-      <SliderLevel
-        min={0}
-        max={5}
-        value={props.analysis?.rating || 0}
-        step={1}
-        onChange={(value: number) =>
-          props.setNewAnalysis({
-            ...props.analysis,
-            rating: value,
-          })
-        }
-        label={'Ocena snu'}
-      />
-      <View style={styles.spaceBetween}>
-        <Paragraph>Czy był to koszmar?</Paragraph>
-        <Switch
-          value={props.analysis?.isNightmare || false}
-          onValueChange={value =>
+      <View style={styles.scene}>
+        <SliderLevel
+          min={0}
+          max={5}
+          value={props.analysis?.sleepLevel || 0}
+          step={1}
+          onChange={(value: number) =>
             props.setNewAnalysis({
               ...props.analysis,
-              isNightmare: value,
+              sleepLevel: value,
             })
           }
+          label={'Poziom wyspania'}
         />
-      </View>
-      <View style={styles.spaceBetween}>
-        <Paragraph>Czy wpłynął na twoje samopoczucie?</Paragraph>
-        <Switch
-          value={props.analysis?.isMoodAffecting || false}
-          onValueChange={value =>
+        <SliderLevel
+          min={0}
+          max={5}
+          value={props.analysis?.rating || 0}
+          step={1}
+          onChange={(value: number) =>
             props.setNewAnalysis({
               ...props.analysis,
-              isMoodAffecting: value,
+              rating: value,
             })
           }
+          label={'Ocena snu'}
         />
+        <View style={styles.spaceBetween}>
+          <Paragraph>Czy był to koszmar?</Paragraph>
+          <Switch
+            value={props.analysis?.isNightmare || false}
+            onValueChange={value =>
+              props.setNewAnalysis({
+                ...props.analysis,
+                isNightmare: value,
+              })
+            }
+          />
+        </View>
+        <View style={styles.spaceBetween}>
+          <Paragraph>Czy wpłynął na twoje samopoczucie?</Paragraph>
+          <Switch
+            value={props.analysis?.isMoodAffecting || false}
+            onValueChange={value =>
+              props.setNewAnalysis({
+                ...props.analysis,
+                isMoodAffecting: value,
+              })
+            }
+          />
+        </View>
+        <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+          <View style={{width: '70%'}}>
+            <SectionedMultiSelect
+              IconRenderer={iconSet}
+              items={items}
+              uniqueKey="name"
+              subKey="children"
+              displayKey="name"
+              selectText="Wybierz emocje..."
+              selectedText="wybranych"
+              confirmText="Zapisz"
+              searchPlaceholderText="Szukaj.."
+              showDropDowns={true}
+              readOnlyHeadings={true}
+              onSelectedItemsChange={array => {
+                setSelectedItems(array);
+              }}
+              selectedItems={selectedItems}
+              onConfirm={() => {
+                props.setNewAnalysis({
+                  ...props.analysis,
+                  emotions: mapToApiEmotions(items, selectedItems),
+                });
+              }}
+              colors={{
+                primary: theme.colors.primary,
+                text: theme.colors.primary,
+              }}
+            />
+          </View>
+          <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+            <IconButton icon={'plus'} />
+            <IconButton icon={'minus'} />
+          </View>
+        </View>
       </View>
-      <SectionedMultiSelect
-        IconRenderer={iconSet}
-        items={items}
-        uniqueKey="name"
-        subKey="children"
-        displayKey="name"
-        selectText="Wybierz emocje..."
-        selectedText="wybranych"
-        confirmText="Zapisz"
-        searchPlaceholderText="Szukaj.."
-        showDropDowns={true}
-        readOnlyHeadings={true}
-        onSelectedItemsChange={array => {
-          setSelectedItems(array);
-        }}
-        selectedItems={selectedItems}
-        onConfirm={() => {
-          props.setNewAnalysis({
-            ...props.analysis,
-            emotions: mapToApiEmotions(items, selectedItems),
-          });
-        }}
-        colors={{primary: theme.colors.primary, text: theme.colors.primary}}
-      />
-    </View>
     </>
   );
 }

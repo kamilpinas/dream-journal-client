@@ -5,7 +5,7 @@ import Paragraph from '../../components/Paragraph';
 import {IconButton, Title} from 'react-native-paper';
 import {theme} from '../../core/theme';
 import Button from '../../components/Button';
-export function RealityCheck({navigation}) {
+export function RealityCheck({navigation, route}) {
   return (
     <ScrollView>
       <IconButton icon="arrow-left" size={30} onPress={navigation.goBack} />
@@ -28,7 +28,9 @@ export function RealityCheck({navigation}) {
         </Paragraph>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate('Notifications')}>
+          onPress={() =>
+            navigation.navigate('Notifications', {user: route.params.user})
+          }>
           Ustaw testy rzeczywistości
         </Button>
 

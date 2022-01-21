@@ -37,6 +37,7 @@ export function NewDream({navigation, route}) {
     route.params !== undefined ? route.params.item.analysis.consciousness : {},
   );
 
+
   const getUserData = async () => {
     try {
       const wg = await AsyncStorage.getItem('user');
@@ -139,6 +140,7 @@ export function NewDream({navigation, route}) {
             Zapisz
           </Button>
         )}
+        
       </View>
     </>
   );

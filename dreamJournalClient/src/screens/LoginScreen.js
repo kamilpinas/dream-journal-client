@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {TouchableOpacity, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import Background from '../components/Background';
-import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
@@ -34,12 +33,22 @@ export default function LoginScreen({navigation}) {
         email: email.value,
         password: password.value,
       });
-      await AsyncStorage.setItem('token', response.data.token);
-      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Dashboard'}],
-      });
+      {
+        if (response.data.user.verified) {
+          await AsyncStorage.setItem('token', response.data.token);
+          await AsyncStorage.setItem(
+            'user',
+            JSON.stringify(response.data.user),
+          );
+          //TODO dodac warunek jesli konto nie jest zweryfikowane
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Dashboard'}],
+          });
+        } else {
+          setEmail({...email, error: 'Konto nie zweryfikowane'});
+        }
+      }
     } catch (err) {
       if (err.response.status === 404) {
         setEmail({
@@ -78,12 +87,6 @@ export default function LoginScreen({navigation}) {
         errorText={password.error}
         secureTextEntry
       />
-      <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen')}>
-          <Text style={styles.forgot}>Nie pamiętasz hasła?</Text>
-        </TouchableOpacity>
-      </View>
       <Button mode="contained" onPress={onLoginPressed}>
         Zaloguj się
       </Button>

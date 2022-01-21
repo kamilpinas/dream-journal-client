@@ -52,6 +52,11 @@ export default function SettingsScreen({navigation}) {
   return (
     <Background>
       <Header>Ustawienia</Header>
+      {userData.role === 'admin' && (
+        <Button styles={styles.button} mode="contained" onPress={() => null}>
+          Zarządzaj użytkownikami
+        </Button>
+      )}
       <Button
         styles={styles.button}
         mode="contained"
@@ -61,7 +66,7 @@ export default function SettingsScreen({navigation}) {
       <Button
         styles={styles.button}
         mode="contained"
-        onPress={() => navigation.navigate('Notifications')}>
+        onPress={() => navigation.navigate('Notifications', {user: userData})}>
         Powiadomienia
       </Button>
       <Button styles={styles.button} mode="contained" onPress={deleteUser}>

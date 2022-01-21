@@ -3,7 +3,10 @@ import {ImageBackground, StyleSheet, View} from 'react-native';
 import {Button, IconButton, Paragraph, Title} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import {theme} from '../core/theme';
-
+import RNPickerSelect, {Item} from 'react-native-picker-select';
+import instance from '../api/axios';
+import {mapStringsToItems} from '../api/helpers/mappings';
+import {CategoryModel} from '../models/category';
 interface SharedDreamCardProps {
   title?: string;
   subtitle?: string;
@@ -12,50 +15,84 @@ interface SharedDreamCardProps {
   user?: string;
   sharedOn?: string;
   votes?: number;
+  category?: CategoryModel;
   onVoteUp: () => void;
   onVoteDown: () => void;
   onDraw: () => void;
-  onCategorySelect: () => void;
+  onCategorySelect: (category: CategoryModel) => void;
 }
-export const SharedDreamCard = (props: SharedDreamCardProps) => (
-  <View style={styles.container}>
-    <ImageBackground
-      source={require('../assets/sharedDreamBackground.png')}
-      resizeMode="cover"
-      style={styles.image}>
-      <View style={styles.insideImage}>
-        <Paragraph style={{marginTop: 50, textAlign: 'right'}}>
-          {props.sharedOn}
-        </Paragraph>
-        <Title style={styles.title}>{props.title}</Title>
-        <Paragraph style={styles.text} ellipsizeMode="tail" numberOfLines={18}>
-          {props.content}
-        </Paragraph>
-        <Paragraph
-          style={{marginTop: 12, textAlign: 'right', fontStyle: 'italic'}}>
-          {props.user}
-        </Paragraph>
-        <View
-          style={{
-            marginTop: 'auto',
-            marginBottom: 40,
-          }}>
-          <View style={styles.grades}>
-            <IconButton
-              icon="thumb-down-outline"
-              size={40}
-              onPress={props.onVoteDown}
-              color={theme.colors.error}
+export const SharedDreamCard = (props: SharedDreamCardProps) => {
+  const [categories, setCategories] = React.useState<Array<Item>>([]);
+  function getCategories() {
+    instance
+      .get('/categories')
+      .then(function (response) {
+        setCategories(
+          mapStringsToItems(
+            response.data.docs.map((item: {name: any}) => item.name),
+          ),
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  React.useEffect(() => {
+    getCategories();
+    return () => {
+      setCategories([]);
+    };
+  }, []);
+  return (
+    <View style={styles.container}>
+      <ImageBackground
+        source={require('../assets/sharedDreamBackground.png')}
+        resizeMode="cover"
+        style={styles.image}>
+        <View style={styles.insideImage}>
+          <Paragraph style={{marginTop: 50, textAlign: 'right'}}>
+            {props.sharedOn}
+          </Paragraph>
+          <Title style={styles.title}>{props.title}</Title>
+          <Paragraph
+            style={styles.text}
+            ellipsizeMode="tail"
+            numberOfLines={18}>
+            {props.content}
+          </Paragraph>
+          <Paragraph
+            style={{marginTop: 12, textAlign: 'right', fontStyle: 'italic'}}>
+            {props.user}
+          </Paragraph>
+          <View
+            style={{
+              marginTop: 'auto',
+              marginBottom: 40,
+            }}>
+            <View style={styles.grades}>
+              <IconButton
+                icon="thumb-down-outline"
+                size={40}
+                onPress={props.onVoteDown}
+                color={theme.colors.error}
+              />
+              <Paragraph style={styles.voteNumber}>({props.votes})</Paragraph>
+              <IconButton
+                icon="thumb-up-outline"
+                size={40}
+                onPress={props.onVoteUp}
+                color={theme.colors.success}
+              />
+            </View>
+
+            <RNPickerSelect
+              key={props.category?.name}
+              placeholder={{value: '', label: 'Wybierz kategorie..'}}
+              value={props.category?.name}
+              onValueChange={text => props.onCategorySelect({name: text})}
+              items={categories}
             />
-            <Paragraph style={styles.voteNumber}>({props.votes})</Paragraph>
-            <IconButton
-              icon="thumb-up-outline"
-              size={40}
-              onPress={props.onVoteUp}
-              color={theme.colors.success}
-            />
-          </View>
-          <View style={styles.grades}>
             <Button
               icon="dice-multiple"
               mode="outlined"
@@ -63,19 +100,12 @@ export const SharedDreamCard = (props: SharedDreamCardProps) => (
               onPress={props.onDraw}>
               Losuj
             </Button>
-            <Button
-              icon="playlist-edit"
-              mode="contained"
-              onPress={props.onCategorySelect}
-              color={theme.colors.primary}>
-              Kategoria
-            </Button>
           </View>
         </View>
-      </View>
-    </ImageBackground>
-  </View>
-);
+      </ImageBackground>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   title: {

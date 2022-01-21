@@ -68,11 +68,6 @@ export function UserDataScreen({navigation, route}) {
         textContentType="emailAddress"
         keyboardType="email-address"
       />
-      <Button
-        mode="contained"
-        onPress={() => navigation.navigate('ResetPasswordScreen')}>
-        Odzyskiwanie hasła
-      </Button>
       <Button mode="contained" onPress={onUpdate}>
         Zaktualizuj
       </Button>

@@ -1,10 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import {TechnicsCard} from '../components/TechnicsCard';
 import {theme} from '../core/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TechnicsScreen({navigation}) {
+  const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const getUserData = async () => {
+    try {
+      const wg = await AsyncStorage.getItem('user');
+      setUserData(JSON.parse(wg));
+      setLoading(true);
+    } catch (err) {
+      setUserData({});
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getUserData();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <SafeAreaView>
       <Header style={styles.cardTitle}>Techniki świadomego snu</Header>
@@ -21,26 +42,37 @@ export default function TechnicsScreen({navigation}) {
           title="Podstawy"
           subtitle="Testy rzeczywistości"
           backgroundColor="#3bb64bee"
-          onPress={() => navigation.navigate('RealityCheck')}
+          onPress={() =>
+            navigation.navigate('RealityCheck', {user: loading && userData})
+          }
         />
         <TechnicsCard
           imgSource={require('../assets/journall_small.png')}
           title="Podstawy"
-          subtitle="Dziennik snów"
+          subtitle="Zapamiętywanie snów"
           backgroundColor="#c4ae34"
-          onPress={() => navigation.navigate('DreamJournal')}
+          onPress={() =>
+            navigation.navigate('DreamJournal', {user: loading && userData})
+          }
+        />
+        <TechnicsCard
+          imgSource={require('../assets/sleeping_small.png')}
+          title="Wypróbuj techniki"
+          subtitle="WBTB - (Wake Back To Bed)"
+          backgroundColor="#e48372f2"
+          onPress={() => navigation.navigate('WBTB')}
         />
         <TechnicsCard
           imgSource={require('../assets/wake-up_small.png')}
           title="Wypróbuj techniki"
-          subtitle="WILD :"
+          subtitle="WILD - (Wake Induced Lucid Dream)"
           backgroundColor="#e2407eeb"
           onPress={() => navigation.navigate('WILD')}
         />
         <TechnicsCard
           imgSource={require('../assets/wake-up2_small.png')}
           title="Wypróbuj techniki"
-          subtitle="MILD :"
+          subtitle="MILD - (Mnemonic Induced Lucid Dream)"
           backgroundColor="#45beb8eb"
           onPress={() => navigation.navigate('MILD')}
         />

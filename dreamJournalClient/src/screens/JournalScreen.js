@@ -11,22 +11,19 @@ import instance from '../api/axios';
 import {categoryIcon} from '../helpers/categoryIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {dreamToSharedDream} from '../helpers/dreamToSharedDream';
+import {values} from 'lodash';
 
 export const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
 export default function JournalScreen({navigation}) {
+  const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [dreams, setDreams] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
 
   const onRefresh = React.useCallback(() => {
     getDreams();
@@ -52,18 +49,18 @@ export default function JournalScreen({navigation}) {
   };
 
   function getDreams() {
-    instance
-      .get('dream')
-      .then(function (response) {
-        if (loading) {
-          setFilteredData(response.data.docs);
-          setDreams(response.data.docs);
-        }
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+    if (loading) {
+      instance
+        .get('/dream/' + userData._id)
+        .then(function (response) {
+          setFilteredData(response.data);
+          setDreams(response.data);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        });
+    }
   }
 
   function deleteDream(id) {
@@ -110,8 +107,10 @@ export default function JournalScreen({navigation}) {
   };
   useEffect(() => {
     getUserData();
-    getDreams();
-  }, []);
+    if (loading) {
+      getDreams();
+    }
+  }, [loading]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,17 +126,16 @@ export default function JournalScreen({navigation}) {
           value={searchQuery}
         />
 
-        {filteredData.map(item => {
-          return (
-            <>
+        {loading &&
+          filteredData.map(item => {
+            return (
               <DreamCard
                 key={item._id}
                 title={item.title}
                 date={moment(item.startDate).format('YYYY-MM-DD')}
-                content={item.content}
                 icon={categoryIcon(item.category.name)}
                 onPress={() => navigation.navigate('NewDream', {item: item})}
-                onDelete={() => showDialog()}
+                onDelete={() => deleteDream(item._id)}
                 isShared={item.isShared}
                 onShare={() => {
                   shareDream(item);
@@ -145,34 +143,8 @@ export default function JournalScreen({navigation}) {
                   getDreams();
                 }}
               />
-              <Portal key={'portal ' + item._id}>
-                <Dialog visible={visible} onDismiss={hideDialog}>
-                  <Dialog.Title>Usuń sen</Dialog.Title>
-                  <Dialog.Content>
-                    <Paragraph>
-                      Czy na pewno chcesz usunąć wybrany sen?
-                    </Paragraph>
-                  </Dialog.Content>
-                  <Dialog.Actions>
-                    <Button
-                      onPress={() => {
-                        hideDialog();
-                      }}>
-                      Anuluj
-                    </Button>
-                    <Button
-                      onPress={() => {
-                        hideDialog();
-                        deleteDream(item._id);
-                      }}>
-                      Usuń
-                    </Button>
-                  </Dialog.Actions>
-                </Dialog>
-              </Portal>
-            </>
-          );
-        })}
+            );
+          })}
       </ScrollView>
       <Fab label="Dodaj sen" onClick={() => navigation.navigate('NewDream')} />
     </SafeAreaView>

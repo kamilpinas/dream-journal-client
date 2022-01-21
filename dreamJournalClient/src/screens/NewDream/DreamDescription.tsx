@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import TextInput from '../../components/TextInput';
 import DatePicker from 'react-native-date-picker';
-import {IconButton, Paragraph} from 'react-native-paper';
+import {IconButton, Modal, Paragraph, Portal} from 'react-native-paper';
 import {theme} from '../../core/theme';
 import moment from 'moment';
 import RNPickerSelect, {Item} from 'react-native-picker-select';
@@ -10,6 +10,7 @@ import instance from '../../api/axios';
 import {mapStringsToItems} from '../../api/helpers/mappings';
 import {DreamModel} from '../../models/dream';
 import Header from '../../components/Header';
+import Button from '../../components/Button';
 
 interface DreamDescriptionProps {
   dream: Partial<DreamModel>;
@@ -20,6 +21,11 @@ export function DreamDescriptio(props: DreamDescriptionProps) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [categories, setCategories] = useState<Array<Item>>([]);
+  const [visible, setVisible] = React.useState(false);
+  const [newCategory, setNewCategory] = useState('');
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   function getCategories() {
     instance
       .get('categories')
@@ -29,6 +35,31 @@ export function DreamDescriptio(props: DreamDescriptionProps) {
             response.data.docs.map((item: {name: any}) => item.name),
           ),
         );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function createCategory() {
+    instance
+      .post('categories', {
+        name: newCategory,
+      })
+      .then(async function (response) {
+        getCategories();
+        hideModal();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function deleteCategory(name) {
+    instance
+      .delete('/categories/' + name)
+      .then(function (response) {
+        getCategories();
       })
       .catch(function (error) {
         console.log(error);
@@ -98,15 +129,26 @@ export function DreamDescriptio(props: DreamDescriptionProps) {
           errorText={undefined}
           description={undefined}
         />
-        <RNPickerSelect
-          key={props.dream.category?.name}
-          placeholder={{value: '', label: 'Wybierz kategorie..'}}
-          value={props.dream.category?.name}
-          onValueChange={text =>
-            props.setNewDream({...props.dream, category: {name: text}})
-          }
-          items={categories}
-        />
+        <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+          <View style={{width: '70%'}}>
+            <RNPickerSelect
+              key={props.dream.category?.name}
+              placeholder={{value: '', label: 'Wybierz kategorie..'}}
+              value={props.dream.category?.name}
+              onValueChange={text =>
+                props.setNewDream({...props.dream, category: {name: text}})
+              }
+              items={categories}
+            />
+          </View>
+          <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+            <IconButton icon={'plus'} onPress={showModal} />
+            <IconButton
+              icon={'minus'}
+              onPress={() => deleteCategory(props.dream.category?._id)}
+            />
+          </View>
+        </View>
         <DatePicker
           modal
           open={open}
@@ -145,6 +187,22 @@ export function DreamDescriptio(props: DreamDescriptionProps) {
             setOpen2(false);
           }}
         />
+        <Portal>
+          <Modal visible={visible} onDismiss={hideModal}>
+            <View style={{backgroundColor: 'white', margin: 15, padding: 30}}>
+              <TextInput
+                label="Nazwa kategorii"
+                returnKeyType="next"
+                value={newCategory}
+                onChangeText={text => setNewCategory(text)}
+                autoCapitalize="none"
+              />
+              <Button mode="contained" onPress={createCategory}>
+                Dodaj kategorie
+              </Button>
+            </View>
+          </Modal>
+        </Portal>
       </View>
     </>
   );

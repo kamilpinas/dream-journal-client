@@ -5,7 +5,6 @@ import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
 interface DreamCardProps {
   title?: string;
-  content?: string;
   date?: string;
   icon?: IconSource;
   size?: number;
@@ -32,7 +31,7 @@ export const DreamCard = (props: DreamCardProps) => (
           onPress={props.onShare}
           disabled={props.isShared}
         />
-        <IconButton icon="delete" onPress={props.onDelete} animated />
+        <IconButton icon="delete" onPress={props.onDelete} />
       </View>
     </View>
   </Card>

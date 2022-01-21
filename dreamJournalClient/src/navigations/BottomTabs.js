@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {BarIcon, BarLabel} from '../navigations/BottomBarComponents';
+import {BarIcon, BarLabel} from './BottomBarComponents';
 import {
   JournalScreen,
   SharedDreamsScreen,
@@ -18,6 +18,10 @@ export default function BottomTabs() {
       channelId: 'realityCheck',
       channelName: 'Reality Check',
     });
+    PushNotification.createChannel({
+      channelId: 'dailyReminder',
+      channelName: 'Daily Reminder',
+    });
   }
 
   useEffect(() => {
@@ -26,13 +30,13 @@ export default function BottomTabs() {
 
   return (
     <Tab.Navigator
-      initialRouteName="notebook"
+      initialRouteName="Notebook"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {height: 55},
       }}>
       <Tab.Screen
-        name="notebook"
+        name="Notebook"
         component={JournalScreen}
         options={{
           tabBarIcon: props => (

@@ -4,7 +4,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import Paragraph from '../../components/Paragraph';
 import {IconButton, Title} from 'react-native-paper';
 import {theme} from '../../core/theme';
-export function DreamJournal({navigation}) {
+import Button from '../../components/Button';
+export function DreamJournal({navigation, route}) {
   return (
     <ScrollView>
       <IconButton icon="arrow-left" size={30} onPress={navigation.goBack} />
@@ -16,31 +17,39 @@ export function DreamJournal({navigation}) {
       </View>
       <View style={{padding: 20}}>
         <Title style={styles.title}>PODSTAWY</Title>
+
+        <Paragraph style={styles.subtitle}>Zapamiętywanie snów?</Paragraph>
+
+        <Paragraph style={{textAlign: 'left'}}>
+          Kluczem do doświadczenia świadomego snu jest zapamiętywanie swoich
+          snów. (Bez tego możemy mieć świadomy sen każdej nocy, a i tak nie
+          będziemy o tym wiedzieć.) W wielu przypadkach wystarczy sama
+          autosugestia- często już samo zaśnięcie z intencją zapamiętania snu
+          skutkuje jego zapamiętaniem.s
+        </Paragraph>
+        <Button
+          mode="contained"
+          onPress={() =>
+            navigation.navigate('Notifications', {user: route.params.user})
+          }>
+          Ustaw przypomnienie o zapisie snu
+        </Button>
         <Paragraph style={styles.subtitle}>Dziennik snów</Paragraph>
-        <Paragraph>
-          Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-          lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum
+        <Paragraph style={{textAlign: 'left'}}>
+          Dodatkowo powinno się prowadzić tzw. dziennik snów- za pomocą formy
+          papierowej, w komputerze lub na dyktafonie. W twoim przypadku dziennik
+          snów jest już gotowy i czeka na zapisanie twoich snów. W ten sposób
+          ilość szczegółów w zapamiętanych snach będzie się zwiększać, dodatkowo
+          pomoże to w odnalezieniu swojego znaku sennego (a ten może być kluczem
+          do odzyskania świadomości we śnie)
         </Paragraph>
-
-        <Paragraph style={styles.subtitle}>Jakie to uczucie?</Paragraph>
-
-        <Paragraph>
-          Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-          lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum
-        </Paragraph>
-
-        <Paragraph style={styles.subtitle}>Jakie to uczucie?</Paragraph>
-
-        <Paragraph>
-          Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-          lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum
-        </Paragraph>
+        <Button
+          mode="contained"
+          onPress={() =>
+            navigation.navigate('Notebook', {user: route.params.user})
+          }>
+          Dziennik snów
+        </Button>
       </View>
     </ScrollView>
   );
