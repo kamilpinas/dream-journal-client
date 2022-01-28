@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {IconButton, Paragraph, Switch} from 'react-native-paper';
+import {IconButton, Paragraph, Portal, Modal, Switch} from 'react-native-paper';
 import {SliderLevel} from '../../components/Slider';
 import iconSet from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
@@ -9,8 +9,11 @@ import {theme} from '../../core/theme';
 import instance from '../../api/axios';
 import {groupBy, mapToApiEmotions} from '../../api/helpers/mappings';
 import Header from '../../components/Header';
+import TextInput from '../../components/TextInput';
+import Button from '../../components/Button';
 interface AnalysisScreenProps {
   analysis?: AnalysisModel;
+  role?: string;
   setNewAnalysis: (dream: Partial<AnalysisModel>) => void;
 }
 
@@ -23,6 +26,11 @@ export interface EmotionItem {
 export function AnalysisModa(props: AnalysisScreenProps) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState<Array<EmotionItem>>([]);
+  const [visible, setVisible] = React.useState(false);
+  const [newEmotion, setNewEmotion] = useState({name: '', type: ''});
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   function getEmotions() {
     instance
       .get('emotions')
@@ -31,8 +39,35 @@ export function AnalysisModa(props: AnalysisScreenProps) {
           ...item,
           children: groupBy(item.children, 'name'),
         }));
-        console.log('MAPPING', grouped);
         setItems(grouped);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function createEmotions() {
+    instance
+      .post('emotions', newEmotion)
+      .then(async function (response) {
+        getEmotions();
+        hideModal();
+        setNewEmotion({name: '', type: ''});
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  function deleteEmotions(ids) {
+    instance
+      .delete('emotions/' + ids)
+      .then(function (response) {
+        getEmotions();
+        props.setNewAnalysis({
+          ...props.analysis,
+          emotions: undefined,
+        });
+        setSelectedItems([]);
       })
       .catch(function (error) {
         console.log(error);
@@ -45,7 +80,6 @@ export function AnalysisModa(props: AnalysisScreenProps) {
       setItems([]);
     };
   }, []);
-  console.log('MAPOWANIE JEBANE!', mapToApiEmotions(items, selectedItems));
   return (
     <>
       <View style={{alignItems: 'center'}}>
@@ -103,7 +137,7 @@ export function AnalysisModa(props: AnalysisScreenProps) {
           />
         </View>
         <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
-          <View style={{width: '70%'}}>
+          <View style={{width: props.role === 'admin' ? '70%' : '100%'}}>
             <SectionedMultiSelect
               IconRenderer={iconSet}
               items={items}
@@ -132,11 +166,45 @@ export function AnalysisModa(props: AnalysisScreenProps) {
               }}
             />
           </View>
-          <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
-            <IconButton icon={'plus'} />
-            <IconButton icon={'minus'} />
-          </View>
+          {props.role === 'admin' && (
+            <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+              <IconButton icon={'plus'} onPress={showModal} />
+              <IconButton
+                icon={'minus'}
+                onPress={() => deleteEmotions(selectedItems)}
+              />
+            </View>
+          )}
         </View>
+        {props.role === 'admin' && (
+          <Portal>
+            <Modal visible={visible} onDismiss={hideModal}>
+              <View style={{backgroundColor: 'white', margin: 15, padding: 30}}>
+                <TextInput
+                  label="Typ emocji"
+                  returnKeyType="next"
+                  value={newEmotion.type}
+                  onChangeText={text =>
+                    setNewEmotion({...newEmotion, type: text})
+                  }
+                  autoCapitalize="none"
+                />
+                <TextInput
+                  label="Nazwa emocji"
+                  returnKeyType="done"
+                  value={newEmotion.name}
+                  onChangeText={text =>
+                    setNewEmotion({...newEmotion, name: text})
+                  }
+                  autoCapitalize="none"
+                />
+                <Button mode="contained" onPress={createEmotions}>
+                  Dodaj emocję
+                </Button>
+              </View>
+            </Modal>
+          </Portal>
+        )}
       </View>
     </>
   );

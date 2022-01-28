@@ -18,6 +18,7 @@ import {WILD} from './src/screens/TechnicsCards/WILD';
 import {MILD} from './src/screens/TechnicsCards/MILD';
 import {WBTB} from './src/screens/TechnicsCards/WBTB';
 import {Notifications} from './src/screens/Notifications';
+import {ManageUsersScreen} from './src/screens/ManageUsers';
 import PushNotification from 'react-native-push-notification';
 
 const Stack = createStackNavigator();
@@ -49,7 +50,7 @@ export default function App() {
   useEffect(() => {
     getAuthState();
   }, []);
-  
+
   if (isLoading) {
     setTimeout(() => {
       setLoading(false);
@@ -78,6 +79,7 @@ export default function App() {
           <Stack.Screen name="MILD" component={MILD} />
           <Stack.Screen name="WBTB" component={WBTB} />
           <Stack.Screen name="Notifications" component={Notifications} />
+          <Stack.Screen name="ManageUsers" component={ManageUsersScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

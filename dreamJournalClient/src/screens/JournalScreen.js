@@ -6,12 +6,11 @@ import {theme} from '../core/theme';
 import {SafeAreaView, StyleSheet, RefreshControl} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Fab} from '../components/Fab';
-import {Searchbar, Button, Paragraph, Dialog, Portal} from 'react-native-paper';
+import {Searchbar} from 'react-native-paper';
 import instance from '../api/axios';
 import {categoryIcon} from '../helpers/categoryIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {dreamToSharedDream} from '../helpers/dreamToSharedDream';
-import {values} from 'lodash';
 
 export const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -49,18 +48,16 @@ export default function JournalScreen({navigation}) {
   };
 
   function getDreams() {
-    if (loading) {
-      instance
-        .get('/dream/' + userData._id)
-        .then(function (response) {
-          setFilteredData(response.data);
-          setDreams(response.data);
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        });
-    }
+    instance
+      .get('/dream/' + userData._id)
+      .then(function (response) {
+        setFilteredData(response.data);
+        setDreams(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
   }
 
   function deleteDream(id) {
@@ -68,7 +65,6 @@ export default function JournalScreen({navigation}) {
       .delete('/dream/' + id)
       .then(function (response) {
         getDreams();
-        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -78,9 +74,7 @@ export default function JournalScreen({navigation}) {
   function updateIsShared(id) {
     instance
       .patch('/dream/isShared/' + id)
-      .then(function (response) {
-        console.log(response);
-      })
+      .then(function (response) {})
       .catch(function (error) {
         console.log(error);
       });
@@ -89,9 +83,7 @@ export default function JournalScreen({navigation}) {
   function shareDream(dream) {
     instance
       .post('/shared-dreams', dreamToSharedDream(dream, userData.name))
-      .then(function (response) {
-        console.log(response);
-      })
+      .then(function (response) {})
       .catch(function (error) {
         console.log(error.response);
       });
@@ -105,12 +97,17 @@ export default function JournalScreen({navigation}) {
       setUserData({});
     }
   };
+
   useEffect(() => {
-    getUserData();
-    if (loading) {
-      getDreams();
-    }
-  }, [loading]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getUserData();
+      if (loading) {
+        getDreams();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, loading]);
 
   return (
     <SafeAreaView style={styles.container}>

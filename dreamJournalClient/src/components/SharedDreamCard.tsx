@@ -20,6 +20,7 @@ interface SharedDreamCardProps {
   onVoteDown: () => void;
   onDraw: () => void;
   onCategorySelect: (category: CategoryModel) => void;
+  onDelete: () => void;
 }
 export const SharedDreamCard = (props: SharedDreamCardProps) => {
   const [categories, setCategories] = React.useState<Array<Item>>([]);
@@ -27,11 +28,7 @@ export const SharedDreamCard = (props: SharedDreamCardProps) => {
     instance
       .get('/categories')
       .then(function (response) {
-        setCategories(
-          mapStringsToItems(
-            response.data.docs.map((item: {name: any}) => item.name),
-          ),
-        );
+        setCategories(mapStringsToItems(response.data.docs));
       })
       .catch(function (error) {
         console.log(error);
@@ -99,6 +96,14 @@ export const SharedDreamCard = (props: SharedDreamCardProps) => {
               color={theme.colors.primary}
               onPress={props.onDraw}>
               Losuj
+            </Button>
+            <Button
+              style={{marginTop: 10}}
+              icon="delete"
+              mode="contained"
+              color={theme.colors.primary}
+              onPress={props.onDelete}>
+              Usuń
             </Button>
           </View>
         </View>

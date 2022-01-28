@@ -37,7 +37,6 @@ export function NewDream({navigation, route}) {
     route.params !== undefined ? route.params.item.analysis.consciousness : {},
   );
 
-
   const getUserData = async () => {
     try {
       const wg = await AsyncStorage.getItem('user');
@@ -56,7 +55,6 @@ export function NewDream({navigation, route}) {
   }, [navigation]);
   const onIndexChanged = index => {
     setNewDream({
-      //userId: userData._id,
       ...newDream,
       ...dreamDesc,
       analysis: {...newAnalysis, consciousness: {...newConsc}},
@@ -76,7 +74,9 @@ export function NewDream({navigation, route}) {
       addDream();
     }
     setActiveIndex(0);
-    navigation.navigate('Dashboard');
+    setTimeout(() => {
+      navigation.navigate('Dashboard');
+    }, 300);
   };
 
   function addDream() {
@@ -84,7 +84,6 @@ export function NewDream({navigation, route}) {
       instance
         .post('/dream', {...newDream, userId: userData._id})
         .then(function (response) {
-          console.log(response);
         })
         .catch(function (error) {
           console.log(error);
@@ -96,7 +95,6 @@ export function NewDream({navigation, route}) {
     instance
       .patch('/dream/' + id, newDream)
       .then(function (response) {
-        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -121,9 +119,14 @@ export function NewDream({navigation, route}) {
         bounces={false}
         index={activeIndex}
         activeDotColor={theme.colors.primary}>
-        <DreamDescription dream={dreamDesc} setNewDream={setDreamDesc} />
+        <DreamDescription
+          dream={dreamDesc}
+          role={userData.role}
+          setNewDream={setDreamDesc}
+        />
         <AnalysisScreen
           analysis={newAnalysis}
+          role={userData.role}
           setNewAnalysis={setNewAnalysis}
         />
         <ConsciousnessScreen
@@ -140,7 +143,6 @@ export function NewDream({navigation, route}) {
             Zapisz
           </Button>
         )}
-        
       </View>
     </>
   );

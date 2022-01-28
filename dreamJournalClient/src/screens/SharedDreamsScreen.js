@@ -23,7 +23,6 @@ export default function SharedDreamsScreen() {
       .then(function (response) {
         setSharedDream(response.data[0]);
         setCategory(category);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -32,9 +31,7 @@ export default function SharedDreamsScreen() {
   function increment(id) {
     instance
       .patch('shared-dreams/vote-up/' + id)
-      .then(function (response) {
-        console.log(response);
-      })
+      .then(function (response) {})
       .catch(function (error) {
         console.log(error);
       });
@@ -48,9 +45,7 @@ export default function SharedDreamsScreen() {
   function decrement(id) {
     instance
       .patch('shared-dreams/vote-down/' + id)
-      .then(function (response) {
-        console.log(response);
-      })
+      .then(function (response) {})
       .catch(function (error) {
         console.log(error);
       });
@@ -61,9 +56,20 @@ export default function SharedDreamsScreen() {
     }
   }
 
+  function deleteSharedDream(id) {
+    instance
+      .delete('/shared-dreams/' + id)
+      .then(function (response) {
+        category ? getCategoryDream(category) : getRandomDream();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   useEffect(() => {
     if (!sharedDream) {
-      //getRandomDream();
+      getRandomDream();
     }
   }, [sharedDream]);
 
@@ -81,6 +87,7 @@ export default function SharedDreamsScreen() {
       onVoteUp={() => increment(sharedDream && sharedDream._id)}
       onDraw={getRandomDream}
       onCategorySelect={category => getCategoryDream(category)}
+      onDelete={() => deleteSharedDream(sharedDream._id)}
     />
   );
 }

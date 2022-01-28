@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import Background from '../components/Background';
-import Logo from '../components/Logo';
 import Header from '../components/Header';
-import Paragraph from '../components/Paragraph';
 import Button from '../components/Button';
-import {StyleSheet, View, BackHandler} from 'react-native';
+import {StyleSheet, BackHandler} from 'react-native';
 import instance from '../api/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,7 +21,6 @@ export default function SettingsScreen({navigation}) {
             index: 0,
             routes: [{name: 'StartScreen'}],
           });
-          console.log(response);
         })
         .catch(function (error) {
           console.log(error);
@@ -53,7 +50,10 @@ export default function SettingsScreen({navigation}) {
     <Background>
       <Header>Ustawienia</Header>
       {userData.role === 'admin' && (
-        <Button styles={styles.button} mode="contained" onPress={() => null}>
+        <Button
+          styles={styles.button}
+          mode="contained"
+          onPress={() => navigation.navigate('ManageUsers', {item: userData})}>
           Zarządzaj użytkownikami
         </Button>
       )}

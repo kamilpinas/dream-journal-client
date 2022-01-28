@@ -1,11 +1,10 @@
 import {Item} from 'react-native-picker-select';
 import _ from 'lodash';
-import {EmotionItem} from '../../screens/NewDream/AnalysisScreen';
 import {EmotionModel} from '../../models/emotion';
 
-export const mapStringsToItems = (array: Array<string>): Array<Item> => {
+export const mapStringsToItems = (array: Array<any>): Array<Item> => {
   return array.map(value => {
-    return {value: value, label: value};
+    return {value: value.name, label: value.name, key: value._id};
   });
 };
 
